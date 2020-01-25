@@ -1,15 +1,15 @@
-import React, { useState, useCallback } from "react";
-import { Hello } from "./Hello"
+import React from 'react';
 
-function App() {
-  const [name, setState] = useState("anshul GoYAL");
-  const handleCahnge = useCallback(e => setState(e.target.value));
-  return (
-    <>
-      Hi
-      <Hello compiler="typescript"></Hello>
-    </>
-  );
+import SimplePivot from "./components/simplePivot/simplePivot"
+
+
+class App extends React.Component {
+  render() {
+    return (
+    <SimplePivot></SimplePivot>
+    );
+  }
 }
+
 
 export default App;
