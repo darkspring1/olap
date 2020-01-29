@@ -1,6 +1,7 @@
  select 
  dr.country,
  dr.city,
+ dt.year as year, dt.month as month, dt.day as day,
  SUM(f.units_sold) units_sold
  FROM
   public.f_sales f
@@ -14,5 +15,9 @@
  join public.d_products dp
  on f.product_id = dp.id
  
+ 
  group by
- dr.country, dr.city
+ dr.country, dr.city, year, month, day
+ 
+ order by year, month, day
+ 
