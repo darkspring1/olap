@@ -4,9 +4,9 @@ import { sales } from './data.js';
 
 const dataSource = new PivotGridDataSource({
     fields: [{
-      caption: 'Region',
+      caption: 'Country',
       width: 120,
-      dataField: 'region',
+      dataField: 'country',
       area: 'row'
     }, {
       caption: 'City',
@@ -22,12 +22,14 @@ const dataSource = new PivotGridDataSource({
       area: 'column'
     }, {
       caption: 'Sales',
-      dataField: 'amount',
+      dataField: 'units_sold',
       dataType: 'number',
       summaryType: 'sum',
       format: 'currency',
       area: 'data'
     }],
+
+    
     store: sales
   });
 

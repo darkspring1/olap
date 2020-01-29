@@ -1,4 +1,4 @@
-export const sales = [{
+export const data = [{
   'id': 1,
   'country': 'Russia',
   'city': 'Moscow',
