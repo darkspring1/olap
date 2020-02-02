@@ -12,13 +12,16 @@ const apiClient = axios.create({
   },
 });
 
+// eslint-disable-next-line @typescript-eslint/interface-name-prefix
+interface ICreateModelResponse
+{
+  id: string;
+}
 
-const updateModelDescription = async (modelDescription: ModelDescription) => {
+const updateModelDescription = async (modelDescription: ModelDescription): IModelId => {
   try {
-    const response = await apiClient.post<ModelDescription>('/model', modelDescription);
-    // const response = await apiClient.post('/model', { test: 'hello' })
-    const user = response.data;
-    return user;
+    const response: AxiosResponse<ICreateModelResponse> = await apiClient.post<ModelDescription>('/model', modelDescription);
+    return response.data;
   } catch (err) {
     if (err && err.response) {
       const axiosError = err as AxiosError<ServerError>;
@@ -31,4 +34,4 @@ const updateModelDescription = async (modelDescription: ModelDescription) => {
 
 
 // eslint-disable-next-line import/prefer-default-export
-export { updateModelDescription };
+export { updateModelDescription, ICreateModelResponse };
