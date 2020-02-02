@@ -2,22 +2,30 @@
 const path = require('path');
 module.exports = {
   
-  entry: "./src/index.js",
+  entry: {
+      main: ['babel-polyfill', './src/index.js']
+  },
   mode: "development",
   devtool: "source-map",
   output: {
-      filename: "./main.js"
-    },
+    filename: "./main.js"
+  },
 
-    devServer: {
-        contentBase: path.join(__dirname, "./"),
-        port: 9000,
-        open: true
-      },
+  devServer: {
+    contentBase: path.join(__dirname, "./"),
+    port: 9000,
+    open: true
+  },
 
-      resolve: {
-        extensions: ['.ts', '.tsx', '.js']
-      },
+  resolve: {
+    extensions: ['.ts', '.tsx', '.js'],
+    alias: {
+      components: path.resolve(__dirname, 'src/components/'),
+      actions: path.resolve(__dirname, 'src/actions/'),
+      sagas: path.resolve(__dirname, 'src/sagas/'),
+      api: path.resolve(__dirname, 'src/api/')
+    }
+  },
   
   module: {
     rules: [
