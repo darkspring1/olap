@@ -1,3 +1,9 @@
+DROP table IF EXISTS public."f_sales";
+DROP table IF EXISTS public."d_products";
+DROP table IF EXISTS public."d_times";
+DROP TABLE IF EXISTS public."d_regions";
+DROP TABLE IF EXISTS public."model_descriptions";
+
 CREATE TABLE public."d_products" (
 				"id" uuid primary key,
 				"name" text NOT NULL);	
@@ -16,6 +22,13 @@ CREATE TABLE public."d_regions" (
 				"id" uuid primary key,
 				"country" varchar(50) NOT null,
 			    "city" varchar(50) NOT null
+				);
+			
+CREATE TABLE public."model_descriptions" (
+				"model_name" text NOT null,
+				"table_name" text NOT null,
+				"column_descriptions" text NOT null,
+				"row_descriptions"  text NOT null
 				);
 			
 			

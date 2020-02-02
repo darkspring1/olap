@@ -11,6 +11,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Npgsql;
+using Olap.Model;
+using Olap.Model.ModelBuilder;
 
 namespace Olap.WebApi
 {
@@ -28,6 +30,9 @@ namespace Olap.WebApi
         {
 
             services
+                .AddTransient<IModelBuilder, ModelBuilder>()
+                .AddTransient<IDbObjectNameGenerator, DbObjectNameGenerator>()
+                .AddTransient<ModelService>()
                 .AddTransient<DbConnection>(sp => new NpgsqlConnection(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddCors();
@@ -53,7 +58,10 @@ namespace Olap.WebApi
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseCors(builder => builder.AllowAnyOrigin());
+            app.UseCors(builder => builder
+            .AllowAnyOrigin()
+            .AllowAnyHeader()
+            .AllowAnyMethod());
 
             app.UseRouting();
 
