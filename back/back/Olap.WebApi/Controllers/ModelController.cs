@@ -26,9 +26,12 @@ namespace Olap.WebApi.Controllers
         }
 
         [HttpPost]
-        public Task Post(ModelDescription modelDescription)
+        public async Task<object> Post(ModelDescription modelDescription)
         {
-            return _modelService.CreateModelAsync(modelDescription);
+#pragma warning disable CA2007 // Consider calling ConfigureAwait on the awaited task
+            var modelTableName = await _modelService.CreateModelAsync(modelDescription);
+#pragma warning restore CA2007 // Consider calling ConfigureAwait on the awaited task
+            return new { Id = modelTableName };
         }
 
     }

@@ -30,7 +30,7 @@ namespace Olap.WebApi
         {
 
             services
-                .AddTransient<IModelBuilder, ModelBuilder>()
+                .AddTransient<IQueryBuilder, QueryBuilder>()
                 .AddTransient<IDbObjectNameGenerator, DbObjectNameGenerator>()
                 .AddTransient<ModelService>()
                 .AddTransient<DbConnection>(sp => new NpgsqlConnection(Configuration.GetConnectionString("DefaultConnection")));

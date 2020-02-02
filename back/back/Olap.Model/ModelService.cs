@@ -11,10 +11,10 @@ namespace Olap.Model
     public class ModelService
     {
         private readonly DbConnection _dbConnection;
-        private readonly IModelBuilder _modelBuilder;
+        private readonly IQueryBuilder _modelBuilder;
         private readonly ILogger<ModelService> _logger;
 
-        public ModelService(DbConnection dbConnection, IModelBuilder modelBuilder, ILogger<ModelService> logger)
+        public ModelService(DbConnection dbConnection, IQueryBuilder modelBuilder, ILogger<ModelService> logger)
         {
             _dbConnection = dbConnection;
             _modelBuilder = modelBuilder;
@@ -22,15 +22,16 @@ namespace Olap.Model
         }
 
 
-        public async Task CreateModelAsync(IModelDescription modelDescription)
+        public async Task<string> CreateModelAsync(IModelDescription modelDescription)
         {
-            var createModelQuery = await _modelBuilder.CreateModelAsync(modelDescription);
+            var createModelQueryResult = await _modelBuilder.CreateModelQueryAsync(modelDescription);
             await _dbConnection.OpenAsync();
             using (var dbCommand = _dbConnection.CreateCommand())
             {
-                dbCommand.CommandText = createModelQuery;
+                dbCommand.CommandText = createModelQueryResult.Query;
                 await dbCommand.ExecuteNonQueryAsync();
             }
+            return createModelQueryResult.ModelTableName;
         }
     }
 }

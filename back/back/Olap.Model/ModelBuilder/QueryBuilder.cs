@@ -5,11 +5,28 @@ using System.Threading.Tasks;
 
 namespace Olap.Model.ModelBuilder
 {
-    public class ModelBuilder : IModelBuilder
+    public class CreateModelQueryResult
+    {
+        public CreateModelQueryResult(string modelTableName, string query)
+        {
+            ModelTableName = modelTableName;
+            Query = query;
+        }
+
+        public string ModelTableName { get; }
+        public string Query { get; }
+    }
+
+    public interface IQueryBuilder
+    {
+        Task<CreateModelQueryResult> CreateModelQueryAsync(IModelDescription modelDescription);
+    }
+
+    public class QueryBuilder : IQueryBuilder
     {
         private readonly IDbObjectNameGenerator _dbObjectNameGenerator;
 
-        public ModelBuilder(IDbObjectNameGenerator dbObjectNameGenerator)
+        public QueryBuilder(IDbObjectNameGenerator dbObjectNameGenerator)
         {
             _dbObjectNameGenerator = dbObjectNameGenerator;
         }
@@ -55,7 +72,7 @@ namespace Olap.Model.ModelBuilder
 
 
 
-        public async Task<string> CreateModelAsync(IModelDescription modelDescription)
+        public async Task<CreateModelQueryResult> CreateModelQueryAsync(IModelDescription modelDescription)
         {
             var sb = new StringBuilder();
 
@@ -80,7 +97,7 @@ namespace Olap.Model.ModelBuilder
 
             sb.Append($"{Environment.NewLine}{CreateInsertDescription(modelTableName, modelDescription)};");
 
-            return sb.ToString();
+            return new CreateModelQueryResult(modelTableName, sb.ToString());
         }
     }
 }
