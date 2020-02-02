@@ -2,8 +2,18 @@
 const path = require('path');
 module.exports = {
   
+  resolve: {
+    extensions: ['.ts', '.tsx', '.js', '.jsx'],
+    alias: {
+      components: path.resolve(__dirname, 'src/components/'),
+      actions: path.resolve(__dirname, 'src/actions/'),
+      sagas: path.resolve(__dirname, 'src/sagas/'),
+      api: path.resolve(__dirname, 'src/api/'),
+    },
+  },
+
   entry: {
-      main: ['babel-polyfill', './src/index.js']
+      main: ['babel-polyfill', './src/index.jsx']
   },
   mode: "development",
   devtool: "source-map",
@@ -16,16 +26,6 @@ module.exports = {
     port: 9000,
     open: true
   },
-
-  resolve: {
-    extensions: ['.ts', '.tsx', '.js'],
-    alias: {
-      components: path.resolve(__dirname, 'src/components/'),
-      actions: path.resolve(__dirname, 'src/actions/'),
-      sagas: path.resolve(__dirname, 'src/sagas/'),
-      api: path.resolve(__dirname, 'src/api/')
-    }
-  },
   
   module: {
     rules: [
@@ -34,9 +34,7 @@ module.exports = {
         //test: /\.m?js$/,
         test: /\.(ts|js)x?$/,
         exclude: /node_modules/,
-        use: {
-          loader: "babel-loader"
-        }
+        use: ["babel-loader", "eslint-loader"]
       },
      
       { 

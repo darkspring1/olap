@@ -1,4 +1,4 @@
-//add your logic
+// add your logic
 const empty = (state = [], action) => {
   switch (action.type) {
     case 'SOME_ACTION':
@@ -7,12 +7,12 @@ const empty = (state = [], action) => {
         {
           id: action.id,
           text: action.text,
-          completed: false
-        }
-      ]
-    
+          completed: false,
+        },
+      ];
+
     default:
-      return state
+      return state;
   }
-}
-export default empty
+};
+export default empty;

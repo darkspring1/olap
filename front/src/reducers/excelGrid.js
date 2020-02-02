@@ -5,12 +5,12 @@ const excelGrid = (state = [], action) => {
         ...state,
         {
           id: action.counter,
-          text: action.text
-        }
-      ]
-    
+          text: action.text,
+        },
+      ];
+
     default:
-      return state
+      return state;
   }
-}
-export default excelGrid
+};
+export default excelGrid;
