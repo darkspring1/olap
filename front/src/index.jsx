@@ -1,35 +1,34 @@
 import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
-import { createStore, applyMiddleware } from 'redux';
-import createSagaMiddleware from 'redux-saga';
-import { Router, Route } from 'react-router';
-import { syncHistoryWithStore } from 'react-router-redux';
-import { createBrowserHistory } from 'history';
-import UpdateModelDescriptionSaga from 'sagas';
-import rootReducer from './reducers';
+import { Route, Switch } from 'react-router'; // react-router v4/v5
+import { ConnectedRouter } from 'connected-react-router';
+import configureStore, { history } from './configureStore.ts';
 import App from './app.tsx';
 
-const sagaMiddleware = createSagaMiddleware();
-
-const store = createStore(rootReducer, applyMiddleware(sagaMiddleware));
-const history = syncHistoryWithStore(createBrowserHistory(), store);
-// затем запускаем saga
-sagaMiddleware.run(UpdateModelDescriptionSaga);
+const store = configureStore(/* provide initial state if any */);
 
 render(
   <Provider store={store}>
-    <Router history={history}>
-      <Route path="/" component={App} />
-      {/* <Router path="/about" component={About}/> */}
-    </Router>
+    <ConnectedRouter history={history}>
+      <>
+        <Switch>
+          <Route exact path="/" render={() => (<App />)} />
+          <Route render={() => (<div>Miss</div>)} />
+        </Switch>
+      </>
+    </ConnectedRouter>
   </Provider>,
   document.getElementById('root'),
 );
 
-// render(
-//   <Provider store={store}>
-//     <App />
-//   </Provider>,
-//   document.querySelector("#root")
-// )
+/*
+render(
+  <Provider store={store}>
+    <Router history={history}>
+      <Route path="/" component={App} />
+    </Router>
+  </Provider>,
+  document.getElementById('root'),
+);
+*/
