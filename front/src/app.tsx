@@ -1,27 +1,18 @@
+/* eslint-disable react/prop-types */
 import React from 'react';
-import { connect } from 'react-redux';
+import history from 'browserHistory';
+import EditorContainer from 'containers/editorContainer.ts';
+import { Router, Route, Switch } from 'react-router-dom';
 import BuilderContainer from './containers/builderContainer.ts';
 
-// eslint-disable-next-line react/prefer-stateless-function
-class App extends React.Component {
-  render() {
-    return (
-      // eslint-disable-next-line react/jsx-filename-extension
-      <BuilderContainer />
-    );
-  }
-}
-
-function mapStateToProps(state: any, ownProps: any): any {
-  return {};
-}
-
-
-function mapDispatchToProps(dispatch: any, ownProps: any): any {
-  return {};
-}
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(App);
+export default () => (
+  <main>
+    <Router history={history}>
+      <Switch>
+        <Route exact path="/" component={BuilderContainer} />
+        <Route path="/model/:id/data" component={EditorContainer} />
+        <Route render={() => (<div>Miss</div>)} />
+      </Switch>
+    </Router>
+  </main>
+);

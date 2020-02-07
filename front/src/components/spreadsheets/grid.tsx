@@ -24,6 +24,7 @@ export default class Grid extends React.Component<GridProps, {}> {
           rowHeaders
           width={width}
           height={height}
+          licenseKey="non-commercial-and-evaluation"
         />
       </>
     );

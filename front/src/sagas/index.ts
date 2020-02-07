@@ -1,19 +1,20 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable no-debugger */
 import { call, takeEvery, put } from 'redux-saga/effects';
+import history from 'browserHistory';
 import { updateModelDescription, ICreateModelResponse } from 'api/api';
-import { IAction, ActionTypes } from 'actions';
-import { ModelDescription } from 'components/modelBuilder';
-import { push } from 'connected-react-router';
+import {
+  IAction, ActionTypes, UpdateModelDescriptionPayload, updateModelDescriptionSucceeded,
+} from 'actions';
+import { IModelDescription, modelDescriptionConverter } from 'common/modelDescription';
 
 // воркер Saga: будет запускаться на действия типа `USER_FETCH_REQUESTED`
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-function* updateModelDescriptionWorker(action: IAction<ModelDescription>) {
-  try {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const response: ICreateModelResponse = yield call(updateModelDescription, action.payload);
-    yield put(push(`/model/${response.id}`));
-  } catch (e) {
-    // yield put({type: "USER_FETCH_FAILED", message: e.message});
-  }
+function* updateModelDescriptionWorker(action: IAction<UpdateModelDescriptionPayload>) {
+  const { modelName, data } = action.payload;
+  const modelDescription: IModelDescription = modelDescriptionConverter.FromData(modelName, data);
+  const response: ICreateModelResponse = yield call(updateModelDescription, modelDescription);
+  history.push(`/model/${response.id}/data`);
 }
 
 /*

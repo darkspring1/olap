@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { ModelDescription } from 'components/modelBuilder/modelDescription';
+import { ModelDescription } from 'common/modelDescription';
 import ApiSettings from '../globals.ts';
 
 // axios.defaults.baseURL = `${ApiSettings .Schema}://${ApiSettings.Host}:${ApiSettings.Port}`;

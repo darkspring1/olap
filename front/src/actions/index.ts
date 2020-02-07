@@ -1,4 +1,4 @@
-import ModelDescription from 'components/modelBuilder/modelDescription.ts';
+import { IModelDescription } from 'common/modelDescription';
 import ActionTypes from './actionTypes.ts';
 
 // eslint-disable-next-line @typescript-eslint/interface-name-prefix
@@ -7,13 +7,38 @@ interface IAction<T> {
   payload: T;
 }
 
+class UpdateModelDescriptionPayload {
+  readonly modelName: string
+
+  readonly data: any[][]
+
+  constructor(modelName: string, data: any[][]) {
+    this.modelName = modelName;
+    this.data = data;
+  }
+}
+
 // eslint-disable-next-line max-len
-function updateModelDescriptionRequested(modelDescription: ModelDescription): IAction<ModelDescription> {
+function updateModelDescriptionRequested(modelName: string, data: any[][]): IAction<UpdateModelDescriptionPayload> {
   return {
     type: ActionTypes.UpdateModelDescriptionRequested,
-    payload: modelDescription,
+    payload: new UpdateModelDescriptionPayload(modelName, data),
   };
 }
 
 
-export { updateModelDescriptionRequested, ActionTypes, IAction };
+function updateModelDescriptionSucceeded(payload: IModelDescription): IAction<IModelDescription> {
+  return {
+    type: ActionTypes.UpdateModelDescriptionSucceeded,
+    payload,
+  };
+}
+
+
+export {
+  updateModelDescriptionRequested,
+  updateModelDescriptionSucceeded,
+  UpdateModelDescriptionPayload,
+  ActionTypes,
+  IAction,
+};

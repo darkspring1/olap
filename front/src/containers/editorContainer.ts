@@ -1,11 +1,11 @@
 /* eslint-disable no-debugger */
 import { connect } from 'react-redux';
 import * as Redux from 'redux';
-import { withRouter } from 'react-router-dom';
 import { updateModelDescriptionRequested } from 'actions';
-import {
-  Builder, IBuilderOwnProps, IBuilderDispatchProps,
-} from 'components/modelBuilder';
+import { withRouter } from 'react-router-dom';
+import { Editor, IEditorOwnProps, IEditorDispatchProps } from '../components/modelDataEditor/editor.tsx';
+
+// import { IBuilderProps } from '../components/modelBuilder/builder';
 
 function createEmptyData(rowCount: number, columnCount: number): any[][] {
   const rows: any[] = new Array(rowCount);
@@ -30,6 +30,7 @@ function getData(modelBuilder: any): any[][] {
 }
 
 function mapStateToProps(state: any, ownProps: any): IBuilderOwnProps {
+  debugger;
   return {
     data: getData(state.modelBuilder),
   };
@@ -39,14 +40,15 @@ function mapStateToProps(state: any, ownProps: any): IBuilderOwnProps {
 function mapDispatchToProps(dispatch: Redux.Dispatch<any>,
   ownProps: IBuilderOwnProps): IBuilderDispatchProps {
   return {
-    onUpdateModel: (modelName: string, data: any[][]) => {
-      const action = updateModelDescriptionRequested(modelName, data);
+    onUpdateModel: (modelDescription: ModelDescription) => {
+      const action = updateModelDescriptionRequested(modelDescription);
       return dispatch(action);
     },
   };
 }
 
+
 export default withRouter(connect(
   mapStateToProps,
   mapDispatchToProps,
-)(Builder));
+)(Editor));

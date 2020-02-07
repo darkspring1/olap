@@ -12,7 +12,8 @@ module.exports = {
       common: path.resolve(__dirname, 'src/common/'),
       state: path.resolve(__dirname, 'src/state/'),
       containers : path.resolve(__dirname, 'src/containers/'),
-      reducers: path.resolve(__dirname, 'reducers')
+      reducers: path.resolve(__dirname, 'src/reducers'),
+      browserHistory: path.resolve(__dirname, 'src/browserHistory'),
     },
   },
 
@@ -33,8 +34,6 @@ module.exports = {
     historyApiFallback: {
       index: 'index.html'
     },
-
-    hot: true,
     
   },
   

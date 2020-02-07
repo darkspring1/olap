@@ -1,9 +1,6 @@
 /* eslint-disable react/button-has-type */
-
 import * as React from 'react';
 import Grid from 'components/spreadsheets/grid';
-import modelDescriptionConverter from './modelDescriptionConverter.ts';
-import ModelDescription from './modelDescription.ts';
 
 // eslint-disable-next-line @typescript-eslint/interface-name-prefix
 export interface IBuilderOwnProps {
@@ -12,7 +9,7 @@ export interface IBuilderOwnProps {
 
 // eslint-disable-next-line @typescript-eslint/interface-name-prefix
 export interface IBuilderDispatchProps {
-  onUpdateModel: (modelDescription: ModelDescription) => void;
+  onUpdateModel: (modelName: string, data: any[][]) => void;
 }
 
 type IBuilderProps = IBuilderOwnProps & IBuilderDispatchProps;
@@ -27,8 +24,7 @@ class Builder extends React.Component<IBuilderProps, {}> {
 
   onUpdateModel(): void {
     const { data, onUpdateModel } = this.props;
-    const modelDescription = modelDescriptionConverter.FromData(this.modelName, data);
-    onUpdateModel(modelDescription);
+    onUpdateModel(this.modelName, data);
   }
 
   render() {
