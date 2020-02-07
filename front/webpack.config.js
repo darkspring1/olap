@@ -9,6 +9,10 @@ module.exports = {
       actions: path.resolve(__dirname, 'src/actions/'),
       sagas: path.resolve(__dirname, 'src/sagas/'),
       api: path.resolve(__dirname, 'src/api/'),
+      common: path.resolve(__dirname, 'src/common/'),
+      state: path.resolve(__dirname, 'src/state/'),
+      containers : path.resolve(__dirname, 'src/containers/'),
+      reducers: path.resolve(__dirname, 'reducers')
     },
   },
 
@@ -22,9 +26,16 @@ module.exports = {
   },
 
   devServer: {
-    contentBase: path.join(__dirname, "./"),
+    contentBase: path.resolve(__dirname, './'),
+    publicPath: '/dist/',
     port: 9000,
-    open: true
+    open: true,
+    historyApiFallback: {
+      index: 'index.html'
+    },
+
+    hot: true,
+    
   },
   
   module: {
