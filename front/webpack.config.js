@@ -10,7 +10,6 @@ module.exports = {
       api: path.resolve(__dirname, 'src/api/'),
       state: path.resolve(__dirname, 'src/state/'),
       containers : path.resolve(__dirname, 'src/containers/'),
-      reducers: path.resolve(__dirname, 'src/reducers/'),
       browserHistory: path.resolve(__dirname, 'src/browserHistory/'),
       store: path.resolve(__dirname, 'src/store/'),
     },

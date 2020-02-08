@@ -16,7 +16,7 @@ import { LOAD_MODEL_DESCRIPTION_REQUESTED } from 'store/model/types.ts';
 function* loadModelDescriptionWorker(action: IAction<ILoadModelDescriptionRequest>) {
   try {
     const response: IModelDescription = yield call(loadModelDescription, action.payload.modelId);
-    yield put(loadModelDescriptionSucceeded());
+    yield put(loadModelDescriptionSucceeded(response));
   } catch (e) {
     yield put(loadModelDescriptionFailed());
   }
