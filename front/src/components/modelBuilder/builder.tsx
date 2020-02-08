@@ -2,37 +2,47 @@
 import * as React from 'react';
 import Grid from 'components/spreadsheets/grid';
 
-// eslint-disable-next-line @typescript-eslint/interface-name-prefix
-export interface IBuilderOwnProps {
-    data: any[][];
+interface IBuilderState {
+  modelName: string;
 }
 
-// eslint-disable-next-line @typescript-eslint/interface-name-prefix
+export interface IBuilderOwnProps {
+    data: any[][];
+    modelName: string;
+}
+
 export interface IBuilderDispatchProps {
-  onUpdateModel: (modelName: string, data: any[][]) => void;
+  onSaveModel: (modelName: string, data: any[][]) => void;
 }
 
 type IBuilderProps = IBuilderOwnProps & IBuilderDispatchProps;
 
-class Builder extends React.Component<IBuilderProps, {}> {
-  modelName: string
-
+class Builder extends React.Component<IBuilderProps, IBuilderState> {
   constructor(props: IBuilderProps) {
     super(props);
-    this.modelName = 'New model';
+    this.state = { modelName: props.modelName };
+
+    this.onChange = this.onChange.bind(this);
   }
 
-  onUpdateModel(): void {
-    const { data, onUpdateModel } = this.props;
-    onUpdateModel(this.modelName, data);
+  onSaveModel(): void {
+    const { data, onSaveModel } = this.props;
+    const { modelName } = this.state;
+    onSaveModel(modelName, data);
+  }
+
+  onChange(e: any): void {
+    this.setState({ modelName: e.target.value });
   }
 
   render() {
+    const { state } = this;
     const { data } = this.props;
     return (
       <>
-        <Grid data={data} width={300} height={300} />
-        <button onClick={() => this.onUpdateModel()}>Update Model</button>
+        <input type="text" value={state.modelName} onChange={this.onChange} />
+        <Grid data={data} width={1200} height={500} />
+        <button onClick={() => this.onSaveModel()}>Save Model</button>
       </>
     );
   }

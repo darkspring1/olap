@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
+/* eslint-disable class-methods-use-this */
+/* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable react/button-has-type */
 import * as React from 'react';
 import Grid from 'components/spreadsheets/grid';
@@ -25,6 +28,9 @@ class Editor extends React.Component<IEditorProps, {}> {
     this.modelName = props.modelName;
   }
 
+  onSaveModel(): void {
+  }
+
   render() {
     const {
       data, modelName, isEmpty, modelId, onDataLoad,
@@ -38,7 +44,15 @@ class Editor extends React.Component<IEditorProps, {}> {
       content = (
         <>
           <h2>{modelName}</h2>
-          <Grid data={data} width={600} height={300} />
+          <label>Выберите регион</label>
+          <br />
+          <select id="dimension">
+            <option value="">Россия</option>
+            <option value="">Европа</option>
+            <option value="">США</option>
+          </select>
+          <Grid data={data} width={1200} height={500} formulas contextMenu />
+          <button onClick={() => this.onSaveModel()}>Сохранить данные</button>
         </>
       );
     }

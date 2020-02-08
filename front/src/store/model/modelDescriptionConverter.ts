@@ -45,12 +45,26 @@ export default class ModelDescriptionConverter {
 
     for (let i = 0; i < rowCount;) {
       const r = new Array(columnCount + 1);
-      r[i] = modelDescription.rows[i].caption;
+      r[0] = modelDescription.rows[i].caption;
       for (let j = 0; j < columnCount;) {
         r[j + 1] = null;
         j += 1;
       }
       rows[i + 1] = r;
+      i += 1;
+    }
+    return rows;
+  }
+
+  static CreateEmptyData(rowCount: number, columnCount: number): any[][] {
+    const rows: any[] = new Array(rowCount);
+    for (let i = 0; i < rowCount;) {
+      const r = new Array(columnCount);
+      for (let j = 0; j < columnCount;) {
+        r[j] = null;
+        j += 1;
+      }
+      rows[i] = r;
       i += 1;
     }
     return rows;
