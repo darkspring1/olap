@@ -11,7 +11,7 @@ namespace Olap.Model.ModelBuilder
 
     public class DbObjectNameGenerator : IDbObjectNameGenerator
     {
-        private readonly string _countQuery = $"SELECT COUNT(*) FROM {DbNames.Schema}.{DbNames.ModelDescriptionTable}";
+        private readonly string _countQuery = $"SELECT COUNT(*) FROM {DbNames.Schema}.{DbNames.ModelDescriptionConst.TableName}";
         private readonly DbConnection _dbConnection;
 
         public DbObjectNameGenerator(DbConnection dbConnection)

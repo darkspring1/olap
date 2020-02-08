@@ -1,10 +1,12 @@
 /* eslint-disable react/button-has-type */
-
 import * as React from 'react';
 import Grid from 'components/spreadsheets/grid';
 
 // eslint-disable-next-line @typescript-eslint/interface-name-prefix
 interface IEditorOwnProps {
+    modelId: string;
+    isEmpty: boolean;
+    modelName: string;
     data: any[][];
 }
 
@@ -20,14 +22,30 @@ class Editor extends React.Component<IEditorProps, {}> {
 
   constructor(props: IEditorOwnProps) {
     super(props);
-    this.modelName = 'New model';
+    this.modelName = props.modelName;
   }
 
   render() {
-    const { data } = this.props;
+    const {
+      data, modelName, isEmpty, modelId, onDataLoad,
+    } = this.props;
+
+    let content = null;
+    if (isEmpty) {
+      content = (<div>loading...</div>);
+      onDataLoad(modelId);
+    } else {
+      content = (
+        <>
+          <h2>{modelName}</h2>
+          <Grid data={data} width={600} height={300} />
+        </>
+      );
+    }
+
     return (
       <>
-        <Grid data={data} width={600} height={300} />
+        {content}
       </>
     );
   }

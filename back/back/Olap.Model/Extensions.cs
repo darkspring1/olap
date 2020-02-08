@@ -1,6 +1,6 @@
 using System.Data.Common;
 
-namespace Olap.WebApi
+namespace Olap.Model
 {
     public static class Extensions
     {

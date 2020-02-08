@@ -1,5 +1,5 @@
 import ModelDescription, { IModelDescription } from './modelDescription.ts';
-import modelDescriptionConverter from './modelDescriptionConverter.ts';
+import ModelDescriptionConverter from './modelDescriptionConverter.ts';
 import {
   loadModelDescriptionRequested,
   loadModelDescriptionSucceeded,
@@ -11,7 +11,9 @@ import {
 } from './actions.ts';
 
 export {
-  ModelDescription, IModelDescription, modelDescriptionConverter,
+  ModelDescription,
+  IModelDescription,
+  ModelDescriptionConverter,
   loadModelDescriptionRequested,
   loadModelDescriptionSucceeded,
   loadModelDescriptionFailed,

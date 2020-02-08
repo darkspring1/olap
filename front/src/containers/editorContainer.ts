@@ -1,35 +1,22 @@
 import { connect } from 'react-redux';
 import * as Redux from 'redux';
-import { loadModelDescriptionRequested } from 'store/model';
+import { loadModelDescriptionRequested, IModelDescription, ModelDescriptionConverter } from 'store/model';
 import { withRouter } from 'react-router-dom';
 import { Editor, IEditorOwnProps, IEditorDispatchProps } from '../components/modelDataEditor/editor.tsx';
+import IState from '../store/iState.ts';
 
-function createEmptyData(rowCount: number, columnCount: number): any[][] {
-  const rows: any[] = new Array(rowCount);
+function mapStateToProps(state: IState, ownProps: any): IEditorOwnProps {
+  const props: IEditorOwnProps = { modelId: ownProps.match.params.id };
 
-  for (let i = 0; i < rowCount;) {
-    const r = new Array(columnCount);
-    for (let j = 0; j < columnCount;) {
-      r[j] = null;
-      j += 1;
-    }
-    rows[i] = r;
-    i += 1;
+  const description: IModelDescription = state?.model?.description;
+  if (description) {
+    props.isEmpty = false;
+    props.modelName = description.modelName;
+    props.data = ModelDescriptionConverter.ToData(state.model.description);
+  } else {
+    props.isEmpty = true;
   }
-  return rows;
-}
-
-function getData(modelBuilder: any): any[][] {
-  if (modelBuilder && modelBuilder.data) {
-    return modelBuilder.data;
-  }
-  return createEmptyData(10, 10);
-}
-
-function mapStateToProps(state: any, ownProps: any): IBuilderOwnProps {
-  return {
-    data: getData(state.modelBuilder),
-  };
+  return props;
 }
 
 

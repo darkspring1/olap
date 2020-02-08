@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Olap.Model;
+using Olap.Model.ModelBuilder;
 using Olap.WebApi.Models;
 
 namespace Olap.WebApi.Controllers
@@ -19,10 +20,10 @@ namespace Olap.WebApi.Controllers
             _logger = logger;
         }
 
-        [HttpGet("/model/description")]
-        public Task Get()
+        [HttpGet("/model/description/{modelId}")]
+        public Task<IModelDescription> Get(string modelId)
         {
-            return null;
+            return _modelService.LoadModelDescriptionAsync(modelId);
         }
 
         [HttpPost("/model/description")]

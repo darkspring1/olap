@@ -7,7 +7,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Olap.WebApi", "Olap.WebApi\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Olap.WebApi.Test", "Olap.WebApi.Test\Olap.WebApi.Test.csproj", "{5266F74F-3F81-4EB4-9F57-891AC42F0243}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Olap.Model", "Olap.Model\Olap.Model.csproj", "{D3E7BB4E-4CF9-4154-B60C-F3E565091325}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Olap.Model", "Olap.Model\Olap.Model.csproj", "{D3E7BB4E-4CF9-4154-B60C-F3E565091325}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C9696252-50EE-4E41-B95D-B2DF7C1006A1}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

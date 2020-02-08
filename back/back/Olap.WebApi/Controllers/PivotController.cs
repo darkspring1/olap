@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Npgsql;
+using Olap.Model;
 using Olap.WebApi.Models;
 
 namespace Olap.WebApi.Controllers
@@ -99,7 +100,9 @@ select
         }
 
         [HttpGet("/pivot_lot_of_data")]
+#pragma warning disable CA1822 // Mark members as static
         public IEnumerable<PivotModel> GetBig()
+#pragma warning restore CA1822 // Mark members as static
         {
             var rnd = new Random();
             const int monthCount = 60;

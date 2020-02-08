@@ -1,6 +1,4 @@
-﻿using Olap.Model.ModelBuilder;
-
-namespace Olap.WebApi.Models
+﻿namespace Olap.Model.ModelBuilder
 {
     public class RowDescription : IRowDescription
     {

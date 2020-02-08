@@ -20,6 +20,7 @@ namespace Olap.Model.ModelBuilder
     public interface IQueryBuilder
     {
         Task<CreateModelQueryResult> CreateModelQueryAsync(IModelDescription modelDescription);
+        string CreateLoadModelDescriptionQuery(string modelId);
     }
 
     public class QueryBuilder : IQueryBuilder
@@ -67,7 +68,11 @@ namespace Olap.Model.ModelBuilder
         {
             var columnsJson = JsonSerializer.Serialize(modelDescription.Columns);
             var rowsJson = JsonSerializer.Serialize(modelDescription.Rows);
-            return $"INSERT INTO {DbNames.Schema}.{DbNames.ModelDescriptionTable}(table_name, model_name, column_descriptions, row_descriptions) VALUES('{modelTableName}','{modelDescription.ModelName}', '{columnsJson}', '{rowsJson}')";
+            return $@"INSERT INTO {DbNames.Schema}.{DbNames.ModelDescriptionConst.TableName}(
+{DbNames.ModelDescriptionConst.TableNameColumn},
+{DbNames.ModelDescriptionConst.ModelNameColumn},
+{DbNames.ModelDescriptionConst.ColumnDescriptionsColumn},
+{DbNames.ModelDescriptionConst.RowDescriptionsColumn}) VALUES('{modelTableName}','{modelDescription.ModelName}', '{columnsJson}', '{rowsJson}')";
         }
 
 
@@ -98,6 +103,18 @@ namespace Olap.Model.ModelBuilder
             sb.Append($"{Environment.NewLine}{CreateInsertDescription(modelTableName, modelDescription)};");
 
             return new CreateModelQueryResult(modelTableName, sb.ToString());
+        }
+
+        public string CreateLoadModelDescriptionQuery(string modelId)
+        {
+            return $@"SELECT
+{DbNames.ModelDescriptionConst.TableNameColumn},
+{DbNames.ModelDescriptionConst.ModelNameColumn},
+{DbNames.ModelDescriptionConst.ColumnDescriptionsColumn},
+{DbNames.ModelDescriptionConst.RowDescriptionsColumn}
+FROM {DbNames.Schema}.{DbNames.ModelDescriptionConst.TableName}
+WHERE {DbNames.ModelDescriptionConst.TableNameColumn} = '{modelId}'
+LIMIT 1";
         }
     }
 }

@@ -1,9 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
 using Olap.Model.ModelBuilder;
-using System;
 using System.Collections.Generic;
 using System.Data.Common;
-using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Olap.Model
@@ -19,6 +18,27 @@ namespace Olap.Model
             _dbConnection = dbConnection;
             _modelBuilder = modelBuilder;
             _logger = logger;
+        }
+
+        public async Task<IModelDescription> LoadModelDescriptionAsync(string modelId)
+        {
+            var query = _modelBuilder.CreateLoadModelDescriptionQuery(modelId);
+            await _dbConnection.OpenAsync();
+            using (var dbCommand = _dbConnection.CreateCommand())
+            {
+                dbCommand.CommandText = query;
+                using (var reader = await dbCommand.ExecuteReaderAsync())
+                {
+                    await reader.ReadAsync();
+
+                    return new ModelDescription
+                    {
+                        ModelName = reader.GetFieldValue<string>(DbNames.ModelDescriptionConst.ModelNameColumn),
+                        Columns = JsonSerializer.Deserialize<IEnumerable<ColumnDescription>>(reader.GetFieldValue<string>(DbNames.ModelDescriptionConst.ColumnDescriptionsColumn)),
+                        Rows = JsonSerializer.Deserialize<IEnumerable<RowDescription>>(reader.GetFieldValue<string>(DbNames.ModelDescriptionConst.RowDescriptionsColumn))
+                    };
+                }
+            }
         }
 
 

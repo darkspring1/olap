@@ -3,7 +3,6 @@
     class DbNames
     {
         public const string Schema = "public";
-        public const string ModelDescriptionTable = "model_descriptions";
 
         /// <summary>
         /// тип PK и FK
@@ -14,5 +13,17 @@
         /// Имя/постфикс для именования столбцов PK, FK
         /// </summary>
         public const string IdColumnName = "id";
+
+        public class ModelDescriptionConst
+        {
+            public const string TableName = "model_descriptions";
+            public const string TableNameColumn = "table_name";
+            public const string ModelNameColumn = "model_name";
+            public const string ColumnDescriptionsColumn = "column_descriptions";
+            public const string RowDescriptionsColumn = "row_descriptions";
+        }
     }
+
+    
+
 }

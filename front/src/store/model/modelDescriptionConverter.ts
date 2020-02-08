@@ -2,21 +2,18 @@ import IColumnDescription from './columnDescription.ts';
 import IRowDescription from './rowDescription.ts';
 import IModelDescription from './modelDescription.ts';
 
-class ModelDescriptionConverter {
-  // eslint-disable-next-line class-methods-use-this
-  private CreateModelColumn(caption: string, index: number): IColumnDescription {
+export default class ModelDescriptionConverter {
+  private static CreateModelColumn(caption: string, index: number): IColumnDescription {
     const result: IColumnDescription = { caption, systemName: `c_${index}`, type: 'number' };
     return result;
   }
 
-  // eslint-disable-next-line class-methods-use-this
-  private CreateModelRow(row: any[]): IRowDescription {
+  private static CreateModelRow(row: any[]): IRowDescription {
     const result: IRowDescription = { caption: row[0] };
     return result;
   }
 
-  // eslint-disable-next-line class-methods-use-this
-  private RowFilter(row: any[], index: number): boolean {
+  private static RowFilter(row: any[], index: number): boolean {
     if (index === 0) {
       return false;
     }
@@ -26,14 +23,36 @@ class ModelDescriptionConverter {
     return true;
   }
 
-  FromData(modelName: string, data: any[][]): IModelDescription {
-    const rows = data.filter(this.RowFilter).map(this.CreateModelRow);
-    const columns = data[0].filter((c) => !!c).map(this.CreateModelColumn);
+  static FromData(modelName: string, data: any[][]): IModelDescription {
+    const rows = data.filter(ModelDescriptionConverter.RowFilter).map(ModelDescriptionConverter.CreateModelRow);
+    const columns = data[0].filter((c) => !!c).map(ModelDescriptionConverter.CreateModelColumn);
     const result: IModelDescription = { modelName, rows, columns };
     return result;
   }
+
+  static ToData(modelDescription: IModelDescription): any[][] {
+    const rowCount: number = modelDescription.rows.length;
+    const columnCount: number = modelDescription.columns.length;
+    const rows: any[] = new Array(rowCount + 1);
+
+    const r0 = new Array(columnCount + 1);
+    r0[0] = null;
+    for (let k = 0; k < columnCount;) {
+      r0[k + 1] = modelDescription.columns[k].caption;
+      k += 1;
+    }
+    rows[0] = r0;
+
+    for (let i = 0; i < rowCount;) {
+      const r = new Array(columnCount + 1);
+      r[i] = modelDescription.rows[i].caption;
+      for (let j = 0; j < columnCount;) {
+        r[j + 1] = null;
+        j += 1;
+      }
+      rows[i + 1] = r;
+      i += 1;
+    }
+    return rows;
+  }
 }
-
-const modelDescriptionConverter = new ModelDescriptionConverter();
-
-export default modelDescriptionConverter;

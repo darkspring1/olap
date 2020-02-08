@@ -1,7 +1,6 @@
-﻿using Olap.Model.ModelBuilder;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace Olap.WebApi.Models
+namespace Olap.Model.ModelBuilder
 {
     public class ModelDescription : IModelDescription
     {
