@@ -25,8 +25,8 @@ CREATE TABLE public."d_regions" (
 				);
 			
 CREATE TABLE public."model_descriptions" (
+				"table_name" text primary key,
 				"model_name" text NOT null,
-				"table_name" text NOT null,
 				"column_descriptions" text NOT null,
 				"row_descriptions"  text NOT null
 				);
