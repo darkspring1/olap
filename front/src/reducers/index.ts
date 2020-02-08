@@ -1,11 +1,11 @@
 import { combineReducers } from 'redux';
 import excelGrid from './excelGrid';
 import empty from './empty';
-import modelReducer from './modelReducer.ts';
+import model from './model.ts';
 
 const createRootReducer = () => combineReducers({
   excelGrid,
   empty,
-  modelReducer,
+  model,
 });
 export default createRootReducer;

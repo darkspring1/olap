@@ -1,8 +1,6 @@
 import axios from 'axios';
-import { ModelDescription } from 'common/modelDescription';
+import { IModelDescription } from 'store/model';
 import ApiSettings from '../globals.ts';
-
-// axios.defaults.baseURL = `${ApiSettings .Schema}://${ApiSettings.Host}:${ApiSettings.Port}`;
 
 const apiClient = axios.create({
   baseURL: `${ApiSettings.Schema}://${ApiSettings.Host}:${ApiSettings.Port}`,
@@ -12,15 +10,14 @@ const apiClient = axios.create({
   },
 });
 
-// eslint-disable-next-line @typescript-eslint/interface-name-prefix
 interface ICreateModelResponse
 {
   id: string;
 }
 
-const updateModelDescription = async (modelDescription: ModelDescription): IModelId => {
+const saveModelDescription = async (modelDescription: IModelDescription): IModelId => {
   try {
-    const response: AxiosResponse<ICreateModelResponse> = await apiClient.post<ModelDescription>('/model', modelDescription);
+    const response: AxiosResponse<ICreateModelResponse> = await apiClient.post<IModelDescription>('/model/description', modelDescription);
     return response.data;
   } catch (err) {
     if (err && err.response) {
@@ -32,6 +29,18 @@ const updateModelDescription = async (modelDescription: ModelDescription): IMode
   }
 };
 
+const loadModelDescription = async (modelId: string): IModelDescription => {
+  try {
+    const response: AxiosResponse<IModelDescription> = await apiClient.get(`/model/description/${modelId}`);
+    return response.data;
+  } catch (err) {
+    if (err && err.response) {
+      const axiosError = err as AxiosError<ServerError>;
+      return axiosError.response.data;
+    }
 
-// eslint-disable-next-line import/prefer-default-export
-export { updateModelDescription, ICreateModelResponse };
+    throw err;
+  }
+};
+
+export { saveModelDescription, ICreateModelResponse, loadModelDescription };

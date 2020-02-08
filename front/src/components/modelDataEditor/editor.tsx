@@ -3,8 +3,6 @@
 import * as React from 'react';
 import Grid from 'components/spreadsheets/grid';
 
-import { IModelDescription } from 'common/modelDescription';
-
 // eslint-disable-next-line @typescript-eslint/interface-name-prefix
 interface IEditorOwnProps {
     data: any[][];
@@ -12,7 +10,7 @@ interface IEditorOwnProps {
 
 // eslint-disable-next-line @typescript-eslint/interface-name-prefix
 interface IEditorDispatchProps {
-  onUpdateModel: (modelDescription: IModelDescription) => void;
+  onDataLoad: (modelId: string) => void;
 }
 
 type IEditorProps = IEditorOwnProps & IEditorDispatchProps;

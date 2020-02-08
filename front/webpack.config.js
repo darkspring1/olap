@@ -6,14 +6,13 @@ module.exports = {
     extensions: ['.ts', '.tsx', '.js', '.jsx'],
     alias: {
       components: path.resolve(__dirname, 'src/components/'),
-      actions: path.resolve(__dirname, 'src/actions/'),
       sagas: path.resolve(__dirname, 'src/sagas/'),
       api: path.resolve(__dirname, 'src/api/'),
-      common: path.resolve(__dirname, 'src/common/'),
       state: path.resolve(__dirname, 'src/state/'),
       containers : path.resolve(__dirname, 'src/containers/'),
-      reducers: path.resolve(__dirname, 'src/reducers'),
-      browserHistory: path.resolve(__dirname, 'src/browserHistory'),
+      reducers: path.resolve(__dirname, 'src/reducers/'),
+      browserHistory: path.resolve(__dirname, 'src/browserHistory/'),
+      store: path.resolve(__dirname, 'src/store/'),
     },
   },
 

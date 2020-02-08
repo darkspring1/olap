@@ -29,7 +29,8 @@
     ],
     "rules": {
         "react/jsx-filename-extension": [1, { "extensions": [".tsx", ".jsx"] }],
-        "@typescript-eslint/interface-name-prefix": "off"
+        "@typescript-eslint/interface-name-prefix": "off",
+        "max-len": ["error", { "code": 200, "tabWidth": 4 }]
     },
 
     "settings": {
@@ -39,6 +40,5 @@
           }
         }
     }
-
    
 }

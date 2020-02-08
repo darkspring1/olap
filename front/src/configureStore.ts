@@ -1,7 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 import { applyMiddleware, compose, createStore } from 'redux';
 import createSagaMiddleware from 'redux-saga';
-import UpdateModelDescriptionSaga from 'sagas';
+import rootSaga from 'sagas';
 import createRootReducer from 'reducers';
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
@@ -21,7 +21,7 @@ export default function configureStore(preloadedState: any) {
   );
 
   // затем запускаем saga
-  sagaMiddleware.run(UpdateModelDescriptionSaga);
+  sagaMiddleware.run(rootSaga);
 
   return store;
 }

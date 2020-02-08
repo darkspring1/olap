@@ -19,13 +19,13 @@ namespace Olap.WebApi.Controllers
             _logger = logger;
         }
 
-        [HttpGet]
+        [HttpGet("/model/description")]
         public Task Get()
         {
             return null;
         }
 
-        [HttpPost]
+        [HttpPost("/model/description")]
         public async Task<object> Post(ModelDescription modelDescription)
         {
 #pragma warning disable CA2007 // Consider calling ConfigureAwait on the awaited task

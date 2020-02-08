@@ -1,8 +1,7 @@
-/* eslint-disable no-debugger */
 import { connect } from 'react-redux';
 import * as Redux from 'redux';
 import { withRouter } from 'react-router-dom';
-import { updateModelDescriptionRequested } from 'actions';
+import { saveModelDescriptionRequested } from 'store/model';
 import {
   Builder, IBuilderOwnProps, IBuilderDispatchProps,
 } from 'components/modelBuilder';
@@ -40,7 +39,7 @@ function mapDispatchToProps(dispatch: Redux.Dispatch<any>,
   ownProps: IBuilderOwnProps): IBuilderDispatchProps {
   return {
     onUpdateModel: (modelName: string, data: any[][]) => {
-      const action = updateModelDescriptionRequested(modelName, data);
+      const action = saveModelDescriptionRequested(modelName, data);
       return dispatch(action);
     },
   };
