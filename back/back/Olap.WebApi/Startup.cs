@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using MongoDB.Driver;
 using Npgsql;
 using Olap.Model;
 using Olap.Model.ModelBuilder;
@@ -33,7 +34,12 @@ namespace Olap.WebApi
                 .AddTransient<IQueryBuilder, QueryBuilder>()
                 .AddTransient<IDbObjectNameGenerator, DbObjectNameGenerator>()
                 .AddTransient<ModelService>()
-                .AddTransient<DbConnection>(sp => new NpgsqlConnection(Configuration.GetConnectionString("DefaultConnection")));
+                .AddTransient<MongoModelService>()
+                .AddTransient<DbConnection>(sp => new NpgsqlConnection(Configuration.GetConnectionString("DefaultConnection")))
+                .AddTransient<MongoClient>(sp => {
+                    return new MongoClient(Configuration.GetConnectionString("MongoConnection"));
+                        }
+                );
 
             services.AddCors();
             /*

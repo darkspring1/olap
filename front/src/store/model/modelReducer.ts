@@ -1,4 +1,4 @@
-import { IAction } from 'store/base/iAction.ts';
+import { IAction } from 'store';
 import { SAVE_MODEL_DESCRIPTION_SUCCEEDED, IModelState, LOAD_MODEL_DESCRIPTION_SUCCEEDED } from './types.ts';
 import IModelDescription from './modelDescription.ts';
 

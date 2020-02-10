@@ -13,9 +13,9 @@ interface IEditorOwnProps {
     data: any[][];
 }
 
-// eslint-disable-next-line @typescript-eslint/interface-name-prefix
 interface IEditorDispatchProps {
   onDataLoad: (modelId: string) => void;
+  onSaveModel: (modelId: string, data: any[][]) => void;
 }
 
 type IEditorProps = IEditorOwnProps & IEditorDispatchProps;
@@ -29,6 +29,8 @@ class Editor extends React.Component<IEditorProps, {}> {
   }
 
   onSaveModel(): void {
+    const { data, modelId, onSaveModel } = this.props;
+    onSaveModel(modelId, data);
   }
 
   render() {

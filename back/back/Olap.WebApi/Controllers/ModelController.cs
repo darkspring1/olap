@@ -11,11 +11,13 @@ namespace Olap.WebApi.Controllers
     [Route("[controller]")]
     public class ModelController : ControllerBase
     {
+        private readonly MongoModelService _mongoModelService;
         private readonly ModelService _modelService;
         private readonly ILogger<ModelController> _logger;
 
-        public ModelController(ModelService modelService, ILogger<ModelController> logger)
+        public ModelController(MongoModelService mongoModelService, ModelService modelService, ILogger<ModelController> logger)
         {
+            _mongoModelService = mongoModelService;
             _modelService = modelService;
             _logger = logger;
         }
@@ -23,14 +25,14 @@ namespace Olap.WebApi.Controllers
         [HttpGet("/model/description/{modelId}")]
         public Task<IModelDescription> Get(string modelId)
         {
-            return _modelService.LoadModelDescriptionAsync(modelId);
+            return _mongoModelService.LoadModelDescriptionAsync(modelId);
         }
 
         [HttpPost("/model/description")]
         public async Task<object> Post(ModelDescription modelDescription)
         {
 #pragma warning disable CA2007 // Consider calling ConfigureAwait on the awaited task
-            var modelTableName = await _modelService.CreateModelAsync(modelDescription);
+            var modelTableName = await _mongoModelService.CreateModelAsync(modelDescription);
 #pragma warning restore CA2007 // Consider calling ConfigureAwait on the awaited task
             return new { Id = modelTableName };
         }

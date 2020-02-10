@@ -3,7 +3,7 @@
 import { call, takeEvery, put } from 'redux-saga/effects';
 import history from 'browserHistory';
 import { saveModelDescription, ICreateModelResponse } from 'api/api';
-import { IAction } from 'store/base/iAction.ts';
+import { IAction } from 'store';
 import {
   ISaveModelDescriptionPayload,
   IModelDescription,

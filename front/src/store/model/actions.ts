@@ -1,4 +1,4 @@
-import IAction from 'store/base/iAction';
+import IAction from 'store/iAction.ts';
 import { IModelDescription } from './modelDescription.ts';
 import {
   LOAD_MODEL_DESCRIPTION_REQUESTED,

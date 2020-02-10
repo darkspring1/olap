@@ -2,7 +2,7 @@ import { call, takeEvery, put } from 'redux-saga/effects';
 
 import { loadModelDescription } from 'api/api';
 
-import { IAction } from 'store/base/iAction.ts';
+import { IAction } from 'store';
 import {
   IModelDescription,
   ILoadModelDescriptionRequest,

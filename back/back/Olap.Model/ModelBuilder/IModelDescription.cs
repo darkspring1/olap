@@ -7,5 +7,7 @@ namespace Olap.Model.ModelBuilder
         IEnumerable<IColumnDescription> Columns { get; }
         IEnumerable<IRowDescription> Rows { get; }
         string ModelName { get; }
+
+        string SystemName { get; set; }
     }
 }
