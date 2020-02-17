@@ -1,6 +1,6 @@
 /* eslint-disable react/button-has-type */
 import * as React from 'react';
-import Grid from 'components/spreadsheets/grid';
+import { Grid } from 'components/excel/grid.tsx';
 
 interface IBuilderState {
   modelName: string;
@@ -41,7 +41,7 @@ class Builder extends React.Component<IBuilderProps, IBuilderState> {
     return (
       <>
         <input type="text" value={state.modelName} onChange={this.onChange} />
-        <Grid data={data} width={1200} height={500} />
+        <Grid data={data} />
         <button onClick={() => this.onSaveModel()}>Save Model</button>
       </>
     );

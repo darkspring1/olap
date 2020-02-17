@@ -39,13 +39,11 @@
     "webpack-dev-server": "^3.10.1"
   },
   "dependencies": {
-    "@handsontable/react": "^3.1.2",
     "axios": "^0.19.2",
     "babel-polyfill": "^6.26.0",
     "devextreme": "19.2.5",
     "devextreme-aspnet-data-nojquery": "^2.5.1",
     "devextreme-react": "19.2.5",
-    "handsontable": "^7.3.0",
     "history": "^4.10.1",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-debugger */
 import { call, takeEvery, put } from 'redux-saga/effects';
-import history from 'browserHistory';
+import history from 'common/browserHistory';
 import { saveModelDescription, ICreateModelResponse } from 'api/api';
 import { IAction } from 'store';
 import {

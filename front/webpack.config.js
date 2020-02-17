@@ -10,7 +10,7 @@ module.exports = {
       api: path.resolve(__dirname, 'src/api/'),
       state: path.resolve(__dirname, 'src/state/'),
       containers : path.resolve(__dirname, 'src/containers/'),
-      browserHistory: path.resolve(__dirname, 'src/browserHistory/'),
+      common: path.resolve(__dirname, 'src/common/'),
       store: path.resolve(__dirname, 'src/store/'),
     },
   },

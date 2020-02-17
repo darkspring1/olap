@@ -1,3 +1,4 @@
+import uuid from 'common/uuid.ts';
 import IColumnDescription from './columnDescription.ts';
 import IRowDescription from './rowDescription.ts';
 import IModelDescription from './modelDescription.ts';
@@ -23,6 +24,10 @@ export default class ModelDescriptionConverter {
     return true;
   }
 
+  private static CreateCell(value: string): any {
+    return { id: uuid(), value };
+  }
+
   static FromData(modelName: string, data: any[][]): IModelDescription {
     const rows = data.filter(ModelDescriptionConverter.RowFilter).map(ModelDescriptionConverter.CreateModelRow);
     const columns = data[0].filter((c) => !!c).map(ModelDescriptionConverter.CreateModelColumn);
@@ -36,18 +41,18 @@ export default class ModelDescriptionConverter {
     const rows: any[] = new Array(rowCount + 1);
 
     const r0 = new Array(columnCount + 1);
-    r0[0] = null;
+    r0[0] = ModelDescriptionConverter.CreateCell(null);
     for (let k = 0; k < columnCount;) {
-      r0[k + 1] = modelDescription.columns[k].caption;
+      r0[k + 1] = ModelDescriptionConverter.CreateCell(modelDescription.columns[k].caption);
       k += 1;
     }
     rows[0] = r0;
 
     for (let i = 0; i < rowCount;) {
       const r = new Array(columnCount + 1);
-      r[0] = modelDescription.rows[i].caption;
+      r[0] = ModelDescriptionConverter.CreateCell(modelDescription.rows[i].caption);
       for (let j = 0; j < columnCount;) {
-        r[j + 1] = null;
+        r[j + 1] = ModelDescriptionConverter.CreateCell(null);
         j += 1;
       }
       rows[i + 1] = r;
@@ -61,7 +66,7 @@ export default class ModelDescriptionConverter {
     for (let i = 0; i < rowCount;) {
       const r = new Array(columnCount);
       for (let j = 0; j < columnCount;) {
-        r[j] = null;
+        r[j] = ModelDescriptionConverter.CreateCell(null);
         j += 1;
       }
       rows[i] = r;
