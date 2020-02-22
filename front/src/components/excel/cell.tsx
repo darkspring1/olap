@@ -53,8 +53,15 @@ export default class Cell extends React.Component<ICellOwnProps, ICellState> {
   onBlur(): void {
     const { editValue } = this.state;
     const { cellViewModel } = this.props;
-    cellViewModel.value = editValue;
     cellViewModel.editValue = editValue;
+
+    if (editValue[0] === '=') {
+      cellViewModel.cell.value = null;
+      cellViewModel.cell.formula = editValue;
+    } else {
+      cellViewModel.cell.value = editValue;
+      cellViewModel.cell.formula = null;
+    }
     this.setState({ mode: CellMode.View });
   }
 
@@ -63,7 +70,7 @@ export default class Cell extends React.Component<ICellOwnProps, ICellState> {
     const { mode, editValue } = this.state;
     let markup;
     if (mode === CellMode.View || mode === CellMode.Active) {
-      markup = <td tabIndex="0" role="button" onClick={() => this.onClick()} onDoubleClick={() => this.onDoubleClick()}>{cellViewModel.value}</td>;
+      markup = <td tabIndex="0" role="button" onClick={() => this.onClick()} onDoubleClick={() => this.onDoubleClick()}>{cellViewModel.cell.value}</td>;
     } else if (mode === CellMode.Edit) {
       markup = <td><input onBlur={this.onBlur} autoFocus type="text" value={editValue} onChange={this.onChange} /></td>;
     }

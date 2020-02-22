@@ -5,9 +5,14 @@ import * as React from 'react';
 import './grid.css';
 import CellViewModel from './cellViewModel.ts';
 import Cell from './cell.tsx';
+import ICell from '../../store/model/cell.ts';
 
 interface IGridOwnProps {
-  data: any[][];
+  data: ICell[][];
+}
+
+interface IGridState {
+  grid: CellViewModel[][];
 }
 
 interface IGridDispatchProps {
@@ -18,7 +23,7 @@ type IGridProps = IGridOwnProps & IGridDispatchProps;
 
 const Alpha = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
-class Grid extends React.Component<IGridProps, {}> {
+class Grid extends React.Component<IGridProps, IGridState> {
   _columnHeaders: string[];
 
   // eslint-disable-next-line no-useless-constructor
@@ -43,10 +48,10 @@ class Grid extends React.Component<IGridProps, {}> {
       i += 1;
     }
 
-    data.forEach((row: any[], rIdx: number) => {
+    data.forEach((row: ICell[], rIdx: number) => {
       grid[rIdx] = new Array<CellViewModel>(row.length);
-      row.forEach((cell: any, cIdx: number) => {
-        grid[rIdx][cIdx] = new CellViewModel(cell.id, cell.value, grid);
+      row.forEach((cell: ICell, cIdx: number) => {
+        grid[rIdx][cIdx] = new CellViewModel(cell, grid);
       });
     });
 
@@ -56,7 +61,7 @@ class Grid extends React.Component<IGridProps, {}> {
   render() {
     const { grid } = this.state;
     const gridRow = function (cells: CellViewModel[]) {
-      return (cells.map((cell: CellViewModel) => <Cell key={cell.id} cellViewModel={cell} />)
+      return (cells.map((cell: CellViewModel) => <Cell key={cell.cell.id} cellViewModel={cell} />)
       );
     };
 

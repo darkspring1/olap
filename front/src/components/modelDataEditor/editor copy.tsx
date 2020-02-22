@@ -1,11 +1,9 @@
-/* eslint-disable no-debugger */
-/* eslint-disable jsx-a11y/no-autofocus */
 /* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable class-methods-use-this */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable react/button-has-type */
 import * as React from 'react';
-import Spreadsheet from 'react-spreadsheet';
+import Grid from 'components/spreadsheets/grid';
 
 // eslint-disable-next-line @typescript-eslint/interface-name-prefix
 interface IEditorOwnProps {
@@ -30,28 +28,12 @@ class Editor extends React.Component<IEditorProps, {}> {
     this.modelName = props.modelName;
   }
 
-
   onSaveModel(): void {
     const { data, modelId, onSaveModel } = this.props;
     onSaveModel(modelId, data);
   }
 
   render() {
-    const RangeEdit = ({ getValue, cell, onChange }) => (
-      <div className="DataEditor">
-        <input
-          type="text"
-          onChange={(e) => {
-            debugger;
-            onChange({ ...cell, value: e.target.value });
-          }}
-          value={getValue({ data: cell }) || 0}
-          autoFocus
-        />
-      </div>
-    );
-
-
     const {
       data, modelName, isEmpty, modelId, onDataLoad,
     } = this.props;
@@ -61,13 +43,6 @@ class Editor extends React.Component<IEditorProps, {}> {
       content = (<div>loading...</div>);
       onDataLoad(modelId);
     } else {
-      data.forEach((row: any[]) => {
-        row.forEach((cell: any) => {
-          // eslint-disable-next-line no-param-reassign
-          cell.DataEditor = RangeEdit;
-        });
-      });
-
       content = (
         <>
           <h2>{modelName}</h2>
@@ -78,7 +53,7 @@ class Editor extends React.Component<IEditorProps, {}> {
             <option value="">Европа</option>
             <option value="">США</option>
           </select>
-          <Spreadsheet data={data} />
+          <Grid data={data} width={1200} height={500} formulas contextMenu />
           <button onClick={() => this.onSaveModel()}>Сохранить данные</button>
         </>
       );

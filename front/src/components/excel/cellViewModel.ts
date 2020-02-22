@@ -1,22 +1,19 @@
+import { ICell } from 'store/model';
+
 /* eslint-disable no-debugger */
 /* eslint-disable no-underscore-dangle */
 export default class CellViewModel {
-  constructor(id: string, value: string, grid: CellViewModel[][]) {
-    this.id = id;
-    this.value = value || '';
-    this.editValue = value || '';
+  constructor(cell: ICell, grid: CellViewModel[][]) {
+    this.cell = cell;
+    this.editValue = cell.value || '';
     this.grid = grid;
   }
 
-    private formula: string;
-
     readonly grid: CellViewModel[][]
 
-    readonly id: string;
+    readonly cell: ICell;
 
     isEditable: boolean;
-
-    value: string;
 
     editValue: string;
 }

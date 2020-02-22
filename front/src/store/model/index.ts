@@ -9,8 +9,10 @@ import {
   saveModelDescriptionFailed,
 
 } from './actions.ts';
+import ICell from './cell.ts';
 
 export {
+  ICell,
   ModelDescription,
   IModelDescription,
   ModelDescriptionConverter,
