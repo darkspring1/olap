@@ -6,32 +6,34 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Olap.Model;
 using Olap.Model.ModelBuilder;
-using Olap.WebApi.Models;
 
 namespace Olap.WebApi.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class FilterController : ControllerBase
+    public class FilterController : BaseApiController
     {
         private readonly IMapper _mapper;
         private readonly MongoModelService _mongoModelService;
-        private readonly ILogger<FilterController> _logger;
 
-        public FilterController(IMapper mapper, MongoModelService mongoModelService, ILogger<FilterController> logger)
+        public FilterController(IMapper mapper, MongoModelService mongoModelService, ILogger<FilterController> logger) : base(logger)
         {
-            this._mapper = mapper;
+            _mapper = mapper;
             _mongoModelService = mongoModelService;
-            _logger = logger;
         }
 
         [HttpGet("/filter")]
         public async Task<IActionResult> Get([FromQuery]string[] systemNames)
         {
+            if (systemNames?.Any() != true)
+            {
+                return Error(Errors.Required(nameof(systemNames)));
+            }
+
             var nonExistenFilters = await _mongoModelService.GetNonExistentFiltesr(systemNames);
             if (nonExistenFilters.Any())
             {
-                return BadRequest(Errors.FiltersAreNonExisten(nonExistenFilters));
+                return Error(Errors.FiltersAreNonExisten(nonExistenFilters));
             }
 
             var filters = await Task.WhenAll(systemNames.Select(sn => _mongoModelService.LoadFilterAsync(sn)));

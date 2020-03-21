@@ -20,5 +20,10 @@ namespace Olap.WebApi
         {
             return new ApiError(1, $"This filters are nonexistens: {string.Join(", ", systemNames)}");
         }
+
+        public static ApiError Required(string requiredParamName)
+        {
+            return new ApiError(2, $"{requiredParamName} is required.");
+        }
     }
 }
