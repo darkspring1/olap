@@ -1,9 +1,11 @@
-﻿using MongoDB.Bson;
+﻿using AutoMapper;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 using Olap.Model.ModelBuilder;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -11,36 +13,95 @@ namespace Olap.Model
 {
     public class MongoModelService
     {
+        private readonly IMapper mapper;
         private readonly MongoClient _mongoClient;
 
         private IMongoCollection<T> GetCollection<T>(string name)
         {
             IMongoDatabase database = _mongoClient.GetDatabase("olap");
-            return database.GetCollection<T>(DbNames.ModelDescriptionConst.TableName);
+            return database.GetCollection<T>(name);
         }
 
-        public MongoModelService(MongoClient mongoClient)
+
+        private IMongoCollection<FilterDescription> FilterDescriptionCollection => GetCollection<FilterDescription>(DbNames.Collections.Filters);
+
+        public MongoModelService(IMapper mapper, MongoClient mongoClient)
         {
+            this.mapper = mapper;
             _mongoClient = mongoClient;
         }
 
-        public async Task<IModelDescription> LoadModelDescriptionAsync(string modelId)
+
+        /// <summary>
+        /// return filter system names that does't exist in db
+        /// </summary>
+        /// <param name="systemNames"></param>
+        /// <returns></returns>
+        public async Task<IEnumerable<string>> GetNonExistentFiltesr(IEnumerable<string> systemNames)
         {
-            var collection = GetCollection<ModelDescription>(DbNames.ModelDescriptionConst.TableName);
-            var filter = new BsonDocument(nameof(IModelDescription.SystemName), modelId);
-            return await collection.Find(filter).FirstAsync();
+
+            var filter = Builders<FilterDescription>.Filter.In(nameof(FilterDescription.CollectionName), systemNames);
+
+            var cursor = await FilterDescriptionCollection.FindAsync(filter);
+            var existedFilters = await cursor.ToListAsync();
+
+            var nonExistenFilters = systemNames.Except(existedFilters.Select(f => f.CollectionName));
+
+            return nonExistenFilters;
         }
 
-        public async Task<string> CreateModelAsync(IModelDescription modelDescription)
+        public async Task<Filter> LoadFilterAsync(string systemName)
         {
-            var collection = GetCollection<IModelDescription>(DbNames.ModelDescriptionConst.TableName);
+            var values = await GetCollection<FilterValue>(systemName)
+                .Find(new BsonDocument())
+                .SortBy(x => x.Order)
+                .ToListAsync();
 
-            //var model = database.RunCommandAsync(cmd);
+            return new Filter(systemName, values);
+        }
 
-            modelDescription.SystemName = $"model_{Guid.NewGuid()}";
-            await collection.InsertOneAsync(modelDescription);
+        public async Task<IEnumerable<string>> CreateFiltersAsync(FilterDescriptionDto[] dtos)
+        {
 
-            return modelDescription.SystemName;
+            var filterDescriptions = new List<FilterDescription>(dtos.Length);
+            var tasks = new List<Task>(dtos.Length + 1);
+
+            foreach (var dto in dtos)
+            {
+                var filterDescription = new FilterDescription { Name = dto.Name };
+                var fValues = mapper.Map<IEnumerable<FilterValue>>(dto.Values);
+                filterDescriptions.Add(filterDescription);
+                tasks.Add(GetCollection<FilterValue>(filterDescription.CollectionName).InsertManyAsync(fValues));
+            }
+
+            tasks.Add(FilterDescriptionCollection.InsertManyAsync(filterDescriptions));
+
+            await Task.WhenAll(tasks);
+
+            return filterDescriptions.Select(x => x.CollectionName);
+        }
+
+        public async Task CreateModelAsync(ModelDescriptionDto dto)
+        {
+            var modelId = Guid.NewGuid();
+            var modelDescription = new ModelDescription
+            {
+                Id = modelId,
+                Name = dto.Name,
+                CellCollection = $"cells_{modelId}"
+            };
+
+            var view = mapper.Map<View>(dto.DefaultView);
+            view.Id = Guid.NewGuid();
+            view.ModelId = modelId;
+            
+
+            var modelDescriptionCollection = GetCollection<ModelDescription>(DbNames.Collections.ModelDescriptions);
+            var viewsCollection = GetCollection<View>(DbNames.Collections.Views);
+
+            await Task.WhenAll(
+                modelDescriptionCollection.InsertOneAsync(modelDescription),
+                viewsCollection.InsertOneAsync(view));
         }
     }
 }

@@ -1,9 +1,9 @@
 ﻿using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Olap.Model;
 using Olap.Model.ModelBuilder;
-using Olap.WebApi.Models;
 
 namespace Olap.WebApi.Controllers
 {
@@ -11,30 +11,29 @@ namespace Olap.WebApi.Controllers
     [Route("[controller]")]
     public class ModelController : ControllerBase
     {
+        private readonly IMapper _mapper;
         private readonly MongoModelService _mongoModelService;
-        private readonly ModelService _modelService;
         private readonly ILogger<ModelController> _logger;
 
-        public ModelController(MongoModelService mongoModelService, ModelService modelService, ILogger<ModelController> logger)
+        public ModelController(IMapper mapper, MongoModelService mongoModelService, ILogger<ModelController> logger)
         {
+            _mapper = mapper;
             _mongoModelService = mongoModelService;
-            _modelService = modelService;
             _logger = logger;
         }
 
         [HttpGet("/model/description/{modelId}")]
-        public Task<IModelDescription> Get(string modelId)
+        public Task<ModelDescription> Get(string modelId)
         {
-            return _mongoModelService.LoadModelDescriptionAsync(modelId);
+            // return _mongoModelService.LoadModelDescriptionAsync(modelId);
+            return null;
         }
 
+
         [HttpPost("/model/description")]
-        public async Task<object> Post(ModelDescription modelDescription)
+        public Task Post(ModelDescriptionDto modelDescription)
         {
-#pragma warning disable CA2007 // Consider calling ConfigureAwait on the awaited task
-            var modelTableName = await _mongoModelService.CreateModelAsync(modelDescription);
-#pragma warning restore CA2007 // Consider calling ConfigureAwait on the awaited task
-            return new { Id = modelTableName };
+            return _mongoModelService.CreateModelAsync(modelDescription);
         }
 
     }
