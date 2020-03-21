@@ -1,6 +1,8 @@
-import { IAction } from 'store';
-import { SAVE_MODEL_DESCRIPTION_SUCCEEDED, IModelState, LOAD_MODEL_DESCRIPTION_SUCCEEDED } from './types.ts';
-import IModelDescription from './modelDescription.ts';
+
+import {
+  SAVE_MODEL_DESCRIPTION_SUCCEEDED, IModelState, LOAD_MODEL_DESCRIPTION_SUCCEEDED, IModelDescription,
+} from './types';
+import IAction from '../iAction';
 
 const initialState: IModelState = {
   description: null,

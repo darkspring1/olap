@@ -1,16 +1,8 @@
 import { call, takeEvery, put } from 'redux-saga/effects';
-
 import { loadModelDescription } from 'api/api';
-
-import { IAction } from 'store';
-import {
-  IModelDescription,
-  ILoadModelDescriptionRequest,
-  loadModelDescriptionSucceeded,
-  loadModelDescriptionFailed,
-} from 'store/model';
-
-import { LOAD_MODEL_DESCRIPTION_REQUESTED } from 'store/model/types.ts';
+import { IAction } from '../store';
+import { ILoadModelDescriptionRequest, LOAD_MODEL_DESCRIPTION_REQUESTED } from '../store/model/types';
+import { IModelDescription, loadModelDescriptionSucceeded, loadModelDescriptionFailed } from '../store/model';
 
 
 function* loadModelDescriptionWorker(action: IAction<ILoadModelDescriptionRequest>) {

@@ -5,7 +5,6 @@ import * as React from 'react';
 import './grid.css';
 import CellViewModel from './cellViewModel.ts';
 import Cell from './cell.tsx';
-import ICell from '../../store/model/cell.ts';
 
 interface IGridOwnProps {
   data: ICell[][];

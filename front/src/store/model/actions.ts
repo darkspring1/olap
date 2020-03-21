@@ -1,5 +1,4 @@
-import IAction from 'store/iAction.ts';
-import { IModelDescription } from './modelDescription.ts';
+
 import {
   LOAD_MODEL_DESCRIPTION_REQUESTED,
   LOAD_MODEL_DESCRIPTION_SUCCEEDED,
@@ -9,7 +8,12 @@ import {
   SAVE_MODEL_DESCRIPTION_FAILED,
   ILoadModelDescriptionRequest,
   ISaveModelDescriptionPayload,
-} from './types.ts';
+  LOAD_FILTERS_REQUESTED,
+  LOAD_FILTERS_SUCCEEDED,
+  LOAD_FILTERS_FAILED,
+} from './types';
+import { IFilterDescription, IModelDescription } from '.';
+import IAction from '../iAction';
 
 export function loadModelDescriptionRequested(modelId: string): IAction<ILoadModelDescriptionRequest> {
   const payload: ILoadModelDescriptionRequest = { modelId };

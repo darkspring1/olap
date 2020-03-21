@@ -1,7 +1,3 @@
-import { ICell } from 'store/model';
-
-/* eslint-disable no-debugger */
-/* eslint-disable no-underscore-dangle */
 export default class CellViewModel {
   constructor(cell: ICell, grid: CellViewModel[][]) {
     this.cell = cell;

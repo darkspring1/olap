@@ -1,25 +1,24 @@
-import uuid from 'common/uuid.ts';
-import IColumnDescription from './columnDescription.ts';
-import IRowDescription from './rowDescription.ts';
-import IModelDescription from './modelDescription.ts';
-import ICell from './cell.ts';
+import uuid from 'common/uuid';
+import { IFilterValue, IFilterDescription } from '../filter';
+import { IModelDescription, IView } from '.';
+
 
 export default class ModelDescriptionConverter {
-  private static CreateModelColumn(caption: string, index: number): IColumnDescription {
-    const result: IColumnDescription = { caption, systemName: `c_${index}`, type: 'number' };
+  private static CreateModelColumn(cell: ICell, order: number): IFilterValue {
+    const result: IFilterValue = { id: uuid(), name: cell.value, order };
     return result;
   }
 
-  private static CreateModelRow(row: any[]): IRowDescription {
-    const result: IRowDescription = { caption: row[0] };
+  private static CreateModelRow(row: ICell[], order: number): IFilterValue {
+    const result: IFilterValue = { id: uuid(), name: row[0].value, order };
     return result;
   }
 
-  private static RowFilter(row: any[], index: number): boolean {
+  private static RowFilter(row: Array<ICell>, index: number): boolean {
     if (index === 0) {
       return false;
     }
-    if (!row[0]) {
+    if (!row[0].value) {
       return false;
     }
     return true;
@@ -29,10 +28,44 @@ export default class ModelDescriptionConverter {
     return { id: uuid(), value, formula };
   }
 
+
   static FromData(modelName: string, data: ICell[][]): IModelDescription {
     const rows = data.filter(ModelDescriptionConverter.RowFilter).map(ModelDescriptionConverter.CreateModelRow);
-    const columns = data[0].filter((c) => !!c).map(ModelDescriptionConverter.CreateModelColumn);
-    const result: IModelDescription = { modelName, rows, columns };
+    const columns = data[0].filter((c) => !!c.value).map(ModelDescriptionConverter.CreateModelColumn);
+
+    const rowFilterName = `${modelName}_f1`;
+    const colFilterName = `${modelName}_f2`;
+
+    const cells: ICell[] = [];
+
+    for (let i = 1; i < data.length;) {
+      const row = data[i];
+      for (let j = 1; j < row.length;) {
+        if (row[j].value) {
+          row[j].filterValues = [rows[i - 1].id, columns[j - 1].id];
+          cells.push(row[j]);
+        }
+        j += 1;
+      }
+      i += 1;
+    }
+
+    const filters: IFilterDescription[] = [{ name: rowFilterName, values: rows }, { name: colFilterName, values: columns }];
+
+    const views: IView[] = [{
+      id: uuid(),
+      name: 'default',
+      rowFilters: [rowFilterName],
+      columnFilters: [colFilterName],
+      cellsDescription: null,
+    }];
+
+    const result: IModelDescription = {
+      id: uuid(),
+      name: modelName,
+      views,
+      filters,
+    };
     return result;
   }
 
@@ -62,11 +95,23 @@ export default class ModelDescriptionConverter {
     return rows;
   }
 
-  static CreateEmptyData(rowCount: number, columnCount: number): ICell[][] {
-    const rows: any[] = new Array(rowCount);
-    for (let i = 0; i < rowCount;) {
+  static CreateEmptyData(rowFilter: IFilterDescription, columnFilter: IFilterDescription): ICell[][] {
+    const rowCount = rowFilter.values.length + 1;
+    const columnCount = columnFilter.values.length + 1;
+    const rows: Array<any[]> = new Array(rowCount);
+
+    const r0 = new Array(columnCount);
+    r0[0] = ModelDescriptionConverter.CreateCell(null, null);
+    for (let k = 1; k < columnCount;) {
+      r0[k] = ModelDescriptionConverter.CreateCell(columnFilter.values[k - 1].name, null);
+      k += 1;
+    }
+    rows[0] = r0;
+
+    for (let i = 1; i < rowCount;) {
       const r = new Array(columnCount);
-      for (let j = 0; j < columnCount;) {
+      r[0] = ModelDescriptionConverter.CreateCell(rowFilter.values[i - 1].name, null);
+      for (let j = 1; j < columnCount;) {
         r[j] = ModelDescriptionConverter.CreateCell(null, null);
         j += 1;
       }

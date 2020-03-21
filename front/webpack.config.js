@@ -5,13 +5,10 @@ module.exports = {
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.jsx'],
     alias: {
-      components: path.resolve(__dirname, 'src/components/'),
-      sagas: path.resolve(__dirname, 'src/sagas/'),
       api: path.resolve(__dirname, 'src/api/'),
       state: path.resolve(__dirname, 'src/state/'),
       containers : path.resolve(__dirname, 'src/containers/'),
       common: path.resolve(__dirname, 'src/common/'),
-      store: path.resolve(__dirname, 'src/store/'),
     },
   },
 

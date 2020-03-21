@@ -1,5 +1,5 @@
-import ModelDescription, { IModelDescription } from './modelDescription.ts';
-import ModelDescriptionConverter from './modelDescriptionConverter.ts';
+
+import ModelDescriptionConverter from './modelDescriptionConverter';
 import {
   loadModelDescriptionRequested,
   loadModelDescriptionSucceeded,
@@ -7,13 +7,13 @@ import {
   saveModelDescriptionRequested,
   saveModelDescriptionSucceeded,
   saveModelDescriptionFailed,
+} from './actions';
+import { ICellDescription, IView, IModelDescription } from './types';
 
-} from './actions.ts';
-import ICell from './cell.ts';
 
 export {
-  ICell,
-  ModelDescription,
+  ICellDescription,
+  IView,
   IModelDescription,
   ModelDescriptionConverter,
   loadModelDescriptionRequested,

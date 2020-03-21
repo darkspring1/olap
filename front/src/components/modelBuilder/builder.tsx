@@ -1,6 +1,7 @@
 /* eslint-disable react/button-has-type */
 import * as React from 'react';
-import { Grid } from 'components/excel/grid.tsx';
+import { Grid } from '../excel/grid';
+import { IFilterDescription } from '../../store/filter';
 
 interface IBuilderState {
   modelName: string;
@@ -13,6 +14,7 @@ export interface IBuilderOwnProps {
 
 export interface IBuilderDispatchProps {
   onSaveModel: (modelName: string, data: any[][]) => void;
+  onLoadData: () => void;
 }
 
 type IBuilderProps = IBuilderOwnProps & IBuilderDispatchProps;
@@ -37,7 +39,13 @@ class Builder extends React.Component<IBuilderProps, IBuilderState> {
 
   render() {
     const { state } = this;
-    const { data } = this.props;
+    const { data, onLoadData } = this.props;
+
+    if (!data) {
+      onLoadData();
+      return (<>loading...</>);
+    }
+
     return (
       <>
         <input type="text" value={state.modelName} onChange={this.onChange} />

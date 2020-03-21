@@ -1,17 +1,18 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable no-debugger */
 import { call, takeEvery, put } from 'redux-saga/effects';
 import history from 'common/browserHistory';
 import { saveModelDescription, ICreateModelResponse } from 'api/api';
-import { IAction } from 'store';
+
 import {
   ISaveModelDescriptionPayload,
   IModelDescription,
   ModelDescriptionConverter,
   saveModelDescriptionSucceeded,
   saveModelDescriptionFailed,
-} from 'store/model';
-import { SAVE_MODEL_DESCRIPTION_REQUESTED } from 'store/model/types.ts';
+} from '../store/model';
+
+import { SAVE_MODEL_DESCRIPTION_REQUESTED } from '../store/model/types.ts';
+import { IAction } from '../store';
 
 function* saveModelDescriptionWorker(action: IAction<ISaveModelDescriptionPayload>) {
   try {
