@@ -31,11 +31,15 @@
         "react/jsx-filename-extension": [1, { "extensions": [".tsx", ".jsx"] }],
         "@typescript-eslint/interface-name-prefix": "off",
         "no-underscore-dangle": "off",
-        "max-len": ["error", { "code": 200, "tabWidth": 4 }]
+        "max-len": ["error", { "code": 200, "tabWidth": 4 }],
+        "import/extensions": "off"
     },
 
     "settings": {
         "import/resolver": {
+        "node": {
+            "moduleDirectory": ["node_modules", "src"]
+        },
           "webpack": {
             "config": "./webpack.config.js"
           }
