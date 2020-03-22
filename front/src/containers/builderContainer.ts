@@ -4,8 +4,9 @@ import { withRouter } from 'react-router-dom';
 import { saveModelDescriptionRequested, IModelDescription } from '../store/model';
 import { IBuilderDispatchProps, IBuilderOwnProps, Builder } from '../components/modelBuilder/builder';
 import { loadFiltersRequested, IFilterDescription } from '../store/filter';
+import { IState } from '../store';
 
-function mapStateToProps(state: any, ownProps: any): IBuilderOwnProps {
+function mapStateToProps(state: IState, ownProps: any): IBuilderOwnProps {
   let rowFilter: IFilterDescription = null;
   let columnFilter: IFilterDescription = null;
 
