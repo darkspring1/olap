@@ -7,9 +7,9 @@
 
         public string Formula { get; set; }
 
-        public string RowIndex { get; set; }
+        public int RowIndex { get; set; }
 
-        public string ColumnIndex { get; set; }
+        public int ColumnIndex { get; set; }
 
         // filterValues: string[];
     }
@@ -21,9 +21,9 @@
 
         public string Formula { get; set; }
 
-        public string RowIndex { get; set; }
+        public int RowIndex { get; set; }
 
-        public string ColumnIndex { get; set; }
+        public int ColumnIndex { get; set; }
 
         // filterValues: string[];
     }

@@ -1,5 +1,4 @@
-﻿using System;
-using AutoMapper;
+﻿using AutoMapper;
 using Olap.Model.ModelBuilder;
 
 namespace Olap.Model.AutomapperProfiles
@@ -10,6 +9,7 @@ namespace Olap.Model.AutomapperProfiles
         {
             CreateMap<ViewDto, View>();
             CreateMap<FilterValueDto, FilterValue>();
+            CreateMap<CellDescriptionDto, CellDescription>();
         }
     }
 }

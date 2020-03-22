@@ -19,7 +19,7 @@ namespace Olap.Model.ModelBuilder
 
         public string[] ColumnFilters { get; set; }
 
-        public IEnumerable<CellDescription> CellsInfo { get; set; }
+        public IEnumerable<CellDescription> CellsDescription { get; set; }
 
         // IEnumerable<ICellInfo> IView.CellsInfo => this.CellsInfo;
     }
