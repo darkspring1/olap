@@ -17,7 +17,14 @@ namespace Olap.Model.ModelBuilder
     public class ModelDescriptionDto
     {
         public string Name { get; set; }
+        public ViewDto DefaultView { get; set; }
+    }
 
+
+    public class ModelDescriptionResponceDto
+    {
+        public Guid Id { get; set; }
+        public string Name { get; set; }
         public ViewDto DefaultView { get; set; }
     }
 }

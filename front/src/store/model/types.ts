@@ -35,10 +35,6 @@ export interface IModelDescription {
 // eslint-disable-next-line semi
 }
 
-export interface ILoadModelDescriptionRequest {
-    modelId: string;
-}
-
 export interface IModelState {
     readonly description: IModelDescription;
     readonly data: any;

@@ -10,7 +10,7 @@ export default () => (
     <Router history={history}>
       <Switch>
         <Route exact path="/" component={BuilderContainer} />
-        {/* <Route path="/model/:id/data" component={EditorContainer} /> */}
+        <Route path="/model/:id/data" component={EditorContainer} />
         <Route render={() => (<div>Miss</div>)} />
       </Switch>
     </Router>

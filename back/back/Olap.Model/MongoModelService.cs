@@ -25,10 +25,41 @@ namespace Olap.Model
 
         private IMongoCollection<FilterDescription> FilterDescriptionCollection => GetCollection<FilterDescription>(DbNames.Collections.Filters);
 
+        private IMongoCollection<ModelDescription> ModelDescriptionCollection => GetCollection<ModelDescription>(DbNames.Collections.ModelDescriptions);
+
+        private IMongoCollection<View> ViewCollection => GetCollection<View>(DbNames.Collections.Views);
+
+        private async Task<ModelDescription> LoadModelDescriptionByIdAsync(string modelId)
+        {
+            var filter = Builders<ModelDescription>.Filter.Eq(nameof(ModelDescription.Id), modelId);
+            var cursor = await ModelDescriptionCollection.FindAsync(filter);
+            return await cursor.SingleAsync();
+        }
+
+        private async Task<View> LoadViewAsync(string modelId)
+        {
+            var filter = Builders<View>.Filter.Eq(nameof(View.ModelId), modelId);
+            var cursor = await ViewCollection.FindAsync(filter);
+            return await cursor.SingleAsync();
+        }
+
         public MongoModelService(IMapper mapper, MongoClient mongoClient)
         {
             this.mapper = mapper;
             _mongoClient = mongoClient;
+        }
+
+        public async Task<ModelDescriptionResponceDto> LoadModelDescriptionAsync(string modelId)
+        {
+            var mdTask = LoadModelDescriptionByIdAsync(modelId);
+            var vTask = LoadViewAsync(modelId);
+
+            await Task.WhenAll(mdTask, vTask);
+
+            var dto = mapper.Map<ModelDescriptionResponceDto>(mdTask.Result);
+            dto.DefaultView = mapper.Map<ViewDto>(vTask.Result);
+
+            return dto;
         }
 
 
@@ -81,7 +112,7 @@ namespace Olap.Model
             return filterDescriptions.Select(x => x.CollectionName);
         }
 
-        public async Task CreateModelAsync(ModelDescriptionDto dto)
+        public async Task<Guid> CreateModelAsync(ModelDescriptionDto dto)
         {
             var modelId = Guid.NewGuid();
             var modelDescription = new ModelDescription
@@ -94,14 +125,12 @@ namespace Olap.Model
             var view = mapper.Map<View>(dto.DefaultView);
             view.Id = Guid.NewGuid();
             view.ModelId = modelId;
-            
-
-            var modelDescriptionCollection = GetCollection<ModelDescription>(DbNames.Collections.ModelDescriptions);
-            var viewsCollection = GetCollection<View>(DbNames.Collections.Views);
-
+ 
             await Task.WhenAll(
-                modelDescriptionCollection.InsertOneAsync(modelDescription),
-                viewsCollection.InsertOneAsync(view));
+                ModelDescriptionCollection.InsertOneAsync(modelDescription),
+                ViewCollection.InsertOneAsync(view));
+
+            return modelId;
         }
     }
 }

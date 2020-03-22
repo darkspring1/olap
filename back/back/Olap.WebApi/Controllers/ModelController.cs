@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -23,15 +24,14 @@ namespace Olap.WebApi.Controllers
         }
 
         [HttpGet("/model/description/{modelId}")]
-        public Task<ModelDescription> Get(string modelId)
+        public Task<ModelDescriptionResponceDto> Get(string modelId)
         {
-            // return _mongoModelService.LoadModelDescriptionAsync(modelId);
-            return null;
+            return _mongoModelService.LoadModelDescriptionAsync(modelId);
         }
 
 
         [HttpPost("/model/description")]
-        public Task Post(ModelDescriptionDto modelDescription)
+        public Task<Guid> Post(ModelDescriptionDto modelDescription)
         {
             return _mongoModelService.CreateModelAsync(modelDescription);
         }

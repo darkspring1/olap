@@ -5,14 +5,12 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable react/button-has-type */
 import * as React from 'react';
-import Spreadsheet from 'react-spreadsheet';
+import { IModelDescription } from '../../store/model';
 
 // eslint-disable-next-line @typescript-eslint/interface-name-prefix
 interface IEditorOwnProps {
-    modelId: string;
-    isEmpty: boolean;
-    modelName: string;
-    data: any[][];
+    readonly modelId: string;
+    modelDescription: IModelDescription;
 }
 
 interface IEditorDispatchProps {
@@ -30,63 +28,23 @@ class Editor extends React.Component<IEditorProps, {}> {
     this.modelName = props.modelName;
   }
 
-
   onSaveModel(): void {
-    const { data, modelId, onSaveModel } = this.props;
-    onSaveModel(modelId, data);
+    const { onSaveModel } = this.props;
+    // onSaveModel(modelId, data);
   }
 
   render() {
-    const RangeEdit = ({ getValue, cell, onChange }) => (
-      <div className="DataEditor">
-        <input
-          type="text"
-          onChange={(e) => {
-            debugger;
-            onChange({ ...cell, value: e.target.value });
-          }}
-          value={getValue({ data: cell }) || 0}
-          autoFocus
-        />
-      </div>
-    );
-
-
     const {
-      data, modelName, isEmpty, modelId, onDataLoad,
+      modelDescription,
     } = this.props;
 
-    let content = null;
-    if (isEmpty) {
-      content = (<div>loading...</div>);
-      onDataLoad(modelId);
-    } else {
-      data.forEach((row: any[]) => {
-        row.forEach((cell: any) => {
-          // eslint-disable-next-line no-param-reassign
-          cell.DataEditor = RangeEdit;
-        });
-      });
 
-      content = (
-        <>
-          <h2>{modelName}</h2>
-          <label>Выберите регион</label>
-          <br />
-          <select id="dimension">
-            <option value="">Россия</option>
-            <option value="">Европа</option>
-            <option value="">США</option>
-          </select>
-          <Spreadsheet data={data} />
-          <button onClick={() => this.onSaveModel()}>Сохранить данные</button>
-        </>
-      );
+    if (!modelDescription) {
+      return <>loading...</>;
     }
-
     return (
       <>
-        {content}
+        model view
       </>
     );
   }

@@ -6,20 +6,14 @@ import {
   SAVE_MODEL_DESCRIPTION_REQUESTED,
   SAVE_MODEL_DESCRIPTION_SUCCEEDED,
   SAVE_MODEL_DESCRIPTION_FAILED,
-  ILoadModelDescriptionRequest,
-  ISaveModelDescriptionPayload,
-  LOAD_FILTERS_REQUESTED,
-  LOAD_FILTERS_SUCCEEDED,
-  LOAD_FILTERS_FAILED,
 } from './types';
-import { IFilterDescription, IModelDescription } from '.';
+import { IModelDescription } from '.';
 import IAction from '../iAction';
 
-export function loadModelDescriptionRequested(modelId: string): IAction<ILoadModelDescriptionRequest> {
-  const payload: ILoadModelDescriptionRequest = { modelId };
+export function loadModelDescriptionRequested(modelId: string): IAction<string> {
   return {
     type: LOAD_MODEL_DESCRIPTION_REQUESTED,
-    payload,
+    payload: modelId,
   };
 }
 

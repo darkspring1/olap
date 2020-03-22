@@ -1,27 +1,39 @@
 import { connect } from 'react-redux';
 import * as Redux from 'redux';
-import { loadModelDescriptionRequested, IModelDescription, ModelDescriptionConverter } from 'store/model';
 import { withRouter } from 'react-router-dom';
-import { Editor, IEditorOwnProps, IEditorDispatchProps } from '../components/modelDataEditor/editor.tsx';
-import IState from '../store/iState.ts';
+import { IState } from '../store';
+import { IEditorOwnProps, Editor, IEditorDispatchProps } from '../components/modelDataEditor/editor';
+import { loadModelDescriptionRequested } from '../store/model';
 
-function mapStateToProps(state: IState, ownProps: any): IEditorOwnProps {
-  const props: IEditorOwnProps = { modelId: ownProps.match.params.id };
+let load: boolean;
 
-  const description: IModelDescription = state?.model?.description;
-  if (description) {
-    props.isEmpty = false;
-    props.modelName = description.modelName;
-    props.data = ModelDescriptionConverter.ToData(state.model.description);
-  } else {
-    props.isEmpty = true;
-  }
+type OwnProps = {
+  match: {
+    params: {
+      id: string;
+    };
+  };
+};
+
+function mapStateToProps(state: IState, ownProps: OwnProps): IEditorOwnProps {
+  const props: IEditorOwnProps = {
+    modelId: ownProps.match.params.id,
+    modelDescription: state.model.description,
+  };
+
+  load = !state.model.description;
+
   return props;
 }
 
 
 function mapDispatchToProps(dispatch: Redux.Dispatch<any>,
-  ownProps: IEditorOwnProps): IEditorDispatchProps {
+  ownProps: OwnProps): IEditorDispatchProps {
+  if (load) {
+    const action = loadModelDescriptionRequested(ownProps.match.params.id);
+    dispatch(action);
+  }
+
   return {
     onDataLoad: (modelId: string) => {
       const action = loadModelDescriptionRequested(modelId);

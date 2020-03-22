@@ -14,9 +14,9 @@ import { IAction } from '../store';
 
 function* saveModelDescriptionWorker(action: IAction<IModelDescription>) {
   try {
-    const response: ICreateModelResponse = yield call(saveModelDescription, action.payload);
+    const modelId: string = yield call(saveModelDescription, action.payload);
     yield put(saveModelDescriptionSucceeded());
-    history.push(`/model/${response.id}/data`);
+    history.push(`/model/${modelId}/data`);
   } catch (e) {
     yield put(saveModelDescriptionFailed());
     throw e;
