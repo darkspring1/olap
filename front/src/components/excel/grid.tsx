@@ -3,7 +3,7 @@
 /* eslint-disable no-debugger */
 import * as React from 'react';
 import './grid.css';
-import CellViewModel from './cellViewModel.ts';
+import CellViewModel from './cellViewModel';
 import Cell from './cell.tsx';
 
 interface IGridOwnProps {
@@ -60,7 +60,7 @@ class Grid extends React.Component<IGridProps, IGridState> {
   render() {
     const { grid } = this.state;
     const gridRow = function (cells: CellViewModel[]) {
-      return (cells.map((cell: CellViewModel) => <Cell key={cell.cell.id} cellViewModel={cell} />)
+      return (cells.map((cell: CellViewModel) => <Cell key={cell.cell.columnIndex} cellViewModel={cell} />)
       );
     };
 

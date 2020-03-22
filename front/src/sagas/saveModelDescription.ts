@@ -4,9 +4,7 @@ import history from 'common/browserHistory';
 import { saveModelDescription, ICreateModelResponse } from 'api/api';
 
 import {
-  ISaveModelDescriptionPayload,
   IModelDescription,
-  ModelDescriptionConverter,
   saveModelDescriptionSucceeded,
   saveModelDescriptionFailed,
 } from '../store/model';
@@ -14,11 +12,9 @@ import {
 import { SAVE_MODEL_DESCRIPTION_REQUESTED } from '../store/model/types.ts';
 import { IAction } from '../store';
 
-function* saveModelDescriptionWorker(action: IAction<ISaveModelDescriptionPayload>) {
+function* saveModelDescriptionWorker(action: IAction<IModelDescription>) {
   try {
-    const { modelName, data } = action.payload;
-    const modelDescription: IModelDescription = ModelDescriptionConverter.FromData(modelName, data);
-    const response: ICreateModelResponse = yield call(saveModelDescription, modelDescription);
+    const response: ICreateModelResponse = yield call(saveModelDescription, action.payload);
     yield put(saveModelDescriptionSucceeded());
     history.push(`/model/${response.id}/data`);
   } catch (e) {

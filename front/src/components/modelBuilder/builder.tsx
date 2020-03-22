@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { Grid } from '../excel/grid';
 import { IFilterDescription } from '../../store/filter';
-import { ModelDescriptionConverter } from '../../store/model';
+import { ModelDescriptionConverter, IModelDescription } from '../../store/model';
 
 interface IBuilderState {
   modelName: string;
@@ -15,7 +15,7 @@ export interface IBuilderOwnProps {
 }
 
 export interface IBuilderDispatchProps {
-  onSaveModel: (modelName: string, data: any[][]) => void;
+  onSaveModel: (payload: IModelDescription) => void;
   onLoadData: () => void;
 }
 
@@ -29,10 +29,14 @@ class Builder extends React.Component<IBuilderProps, IBuilderState> {
     this.onChange = this.onChange.bind(this);
   }
 
-  onSaveModel(): void {
-    const { data, onSaveModel } = this.props;
+  onSaveModel(data: ICellDescription[][]): void {
+    const { onSaveModel, rowFilter, columnFilter } = this.props;
     const { modelName } = this.state;
-    onSaveModel(modelName, data);
+
+    const defaultView = ModelDescriptionConverter.CreateView('default', [rowFilter.systemName], [columnFilter.systemName], data);
+
+    const modelDescription: IModelDescription = { name: modelName, defaultView };
+    onSaveModel(modelDescription);
   }
 
   onChange(e: any): void {
@@ -54,7 +58,7 @@ class Builder extends React.Component<IBuilderProps, IBuilderState> {
       <>
         <input type="text" value={state.modelName} onChange={this.onChange} />
         <Grid data={data} />
-        <button onClick={() => this.onSaveModel()}>Save Model</button>
+        <button onClick={() => this.onSaveModel(data)}>Save Model</button>
       </>
     );
   }

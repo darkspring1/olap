@@ -37,8 +37,7 @@ export function loadModelDescriptionFailed(): IAction<any> {
   };
 }
 
-export function saveModelDescriptionRequested(modelName: string, data: any[][]): IAction<ISaveModelDescriptionPayload> {
-  const payload: IAction<ISaveModelDescriptionPayload> = { modelName, data };
+export function saveModelDescriptionRequested(payload: IModelDescription): IAction<IModelDescription> {
   return {
     type: SAVE_MODEL_DESCRIPTION_REQUESTED,
     payload,

@@ -4,7 +4,7 @@
 /* eslint-disable react/prefer-stateless-function */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import * as React from 'react';
-import CellViewModel from './cellViewModel.ts';
+import CellViewModel from './cellViewModel';
 
 interface ICellOwnProps {
   cellViewModel: CellViewModel;
@@ -56,7 +56,8 @@ export default class Cell extends React.Component<ICellOwnProps, ICellState> {
     cellViewModel.editValue = editValue;
 
     if (editValue[0] === '=') {
-      cellViewModel.cell.value = null;
+      // cellViewModel.cell.value = null;
+      cellViewModel.cell.value = editValue;
       cellViewModel.cell.formula = editValue;
     } else {
       cellViewModel.cell.value = editValue;

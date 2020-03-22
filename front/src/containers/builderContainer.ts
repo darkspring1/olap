@@ -24,8 +24,6 @@ function mapDispatchToProps(dispatch: Redux.Dispatch<any>,
   ownProps: IBuilderOwnProps): IBuilderDispatchProps {
   return {
     onSaveModel: (payload: IModelDescription) => {
-      // eslint-disable-next-line no-debugger
-      debugger;
       const action = saveModelDescriptionRequested(payload);
       return dispatch(action);
     },
