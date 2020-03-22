@@ -2,14 +2,16 @@
 import * as React from 'react';
 import { Grid } from '../excel/grid';
 import { IFilterDescription } from '../../store/filter';
+import { ModelDescriptionConverter } from '../../store/model';
 
 interface IBuilderState {
   modelName: string;
 }
 
 export interface IBuilderOwnProps {
-    data: any[][];
     modelName: string;
+    rowFilter: IFilterDescription;
+    columnFilter: IFilterDescription;
 }
 
 export interface IBuilderDispatchProps {
@@ -39,12 +41,14 @@ class Builder extends React.Component<IBuilderProps, IBuilderState> {
 
   render() {
     const { state } = this;
-    const { data, onLoadData } = this.props;
+    const { onLoadData, rowFilter, columnFilter } = this.props;
 
-    if (!data) {
+    if (!rowFilter) {
       onLoadData();
       return (<>loading...</>);
     }
+
+    const data = ModelDescriptionConverter.CreateData(rowFilter, columnFilter);
 
     return (
       <>

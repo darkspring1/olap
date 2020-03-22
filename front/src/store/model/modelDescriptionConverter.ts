@@ -1,6 +1,6 @@
 import uuid from 'common/uuid';
 import { IFilterValue, IFilterDescription } from '../filter';
-import { IModelDescription, IView } from '.';
+import { IModelDescription, IView, ICellDescription } from '.';
 
 
 export default class ModelDescriptionConverter {
@@ -24,8 +24,10 @@ export default class ModelDescriptionConverter {
     return true;
   }
 
-  private static CreateCell(value: string, formula: string): ICell {
-    return { id: uuid(), value, formula };
+  private static CreateCell(value: string, formula: string, rowIndex: number, columnIndex: number): ICellDescription {
+    return {
+      value, formula, rowIndex, columnIndex,
+    };
   }
 
 
@@ -95,24 +97,24 @@ export default class ModelDescriptionConverter {
     return rows;
   }
 
-  static CreateEmptyData(rowFilter: IFilterDescription, columnFilter: IFilterDescription): ICell[][] {
+  static CreateData(rowFilter: IFilterDescription, columnFilter: IFilterDescription): ICellDescription[][] {
     const rowCount = rowFilter.values.length + 1;
     const columnCount = columnFilter.values.length + 1;
     const rows: Array<any[]> = new Array(rowCount);
 
     const r0 = new Array(columnCount);
-    r0[0] = ModelDescriptionConverter.CreateCell(null, null);
+    r0[0] = ModelDescriptionConverter.CreateCell(null, null, 0, 0);
     for (let k = 1; k < columnCount;) {
-      r0[k] = ModelDescriptionConverter.CreateCell(columnFilter.values[k - 1].name, null);
+      r0[k] = ModelDescriptionConverter.CreateCell(columnFilter.values[k - 1].name, null, 0, k);
       k += 1;
     }
     rows[0] = r0;
 
     for (let i = 1; i < rowCount;) {
       const r = new Array(columnCount);
-      r[0] = ModelDescriptionConverter.CreateCell(rowFilter.values[i - 1].name, null);
+      r[0] = ModelDescriptionConverter.CreateCell(rowFilter.values[i - 1].name, null, i, 0);
       for (let j = 1; j < columnCount;) {
-        r[j] = ModelDescriptionConverter.CreateCell(null, null);
+        r[j] = ModelDescriptionConverter.CreateCell(null, null, i, j);
         j += 1;
       }
       rows[i] = r;

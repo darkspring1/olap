@@ -30,21 +30,13 @@ export interface IView {
 }
 
 export interface IModelDescription {
-    readonly id: string;
     readonly name: string;
-    readonly views: IView[];
-    readonly filters: IFilterDescription[];
+    readonly defaultView: IView;
 // eslint-disable-next-line semi
 }
 
 export interface ILoadModelDescriptionRequest {
     modelId: string;
-}
-
-export class ISaveModelDescriptionPayload {
-    readonly modelName: string;
-
-    readonly data: any[][];
 }
 
 export interface IModelState {

@@ -1,29 +1,32 @@
 import { connect } from 'react-redux';
 import * as Redux from 'redux';
 import { withRouter } from 'react-router-dom';
-import { ModelDescriptionConverter, saveModelDescriptionRequested } from '../store/model';
+import { saveModelDescriptionRequested, IModelDescription } from '../store/model';
 import { IBuilderDispatchProps, IBuilderOwnProps, Builder } from '../components/modelBuilder/builder';
 import { loadFiltersRequested, IFilterDescription } from '../store/filter';
 
-function getData(filters: IFilterDescription[]): any[][] {
-  if (filters.length === 2) {
-    return ModelDescriptionConverter.CreateEmptyData(filters[0], filters[1]);
-  }
-  return null;
-}
-
 function mapStateToProps(state: any, ownProps: any): IBuilderOwnProps {
+  let rowFilter: IFilterDescription = null;
+  let columnFilter: IFilterDescription = null;
+
+  if (state.filters.length === 2) {
+    [columnFilter, rowFilter] = state.filters;
+  }
+
   return {
     modelName: 'New model',
-    data: getData(state.filters),
+    rowFilter,
+    columnFilter,
   };
 }
 
 function mapDispatchToProps(dispatch: Redux.Dispatch<any>,
   ownProps: IBuilderOwnProps): IBuilderDispatchProps {
   return {
-    onSaveModel: (modelName: string, data: any[][]) => {
-      const action = saveModelDescriptionRequested(modelName, data);
+    onSaveModel: (payload: IModelDescription) => {
+      // eslint-disable-next-line no-debugger
+      debugger;
+      const action = saveModelDescriptionRequested(payload);
       return dispatch(action);
     },
 
