@@ -4,8 +4,8 @@ import { withRouter } from 'react-router-dom';
 import { IState } from '../store';
 import { IEditorOwnProps, Editor, IEditorDispatchProps } from '../components/modelDataEditor/editor';
 import { loadModelDescriptionRequested } from '../store/model';
+import { IFilterDescription, loadFiltersRequested } from '../store/filter';
 
-let load: boolean;
 
 type OwnProps = {
   match: {
@@ -13,15 +13,29 @@ type OwnProps = {
       id: string;
     };
   };
+  loadModelDescription: boolean;
 };
 
 function mapStateToProps(state: IState, ownProps: OwnProps): IEditorOwnProps {
+  const { description } = state.model;
+  let rowFilters: IFilterDescription = null;
+  let columnFilters: IFilterDescription = null;
+  const defaultView = description ? description.defaultView : null;
+
+  if (!defaultView) {
+    // eslint-disable-next-line no-param-reassign
+    ownProps.loadModelDescription = true;
+  } else {
+    rowFilters = state.filters.find((x) => x.systemName === defaultView.rowFilters[0]);
+    columnFilters = state.filters.find((x) => x.systemName === defaultView.columnFilters[0]);
+  }
+
   const props: IEditorOwnProps = {
     modelId: ownProps.match.params.id,
-    modelDescription: state.model.description,
+    cellsDescription: defaultView ? defaultView.cellsDescription : null,
+    columnFilters,
+    rowFilters,
   };
-
-  load = !state.model.description;
 
   return props;
 }
@@ -29,16 +43,12 @@ function mapStateToProps(state: IState, ownProps: OwnProps): IEditorOwnProps {
 
 function mapDispatchToProps(dispatch: Redux.Dispatch<any>,
   ownProps: OwnProps): IEditorDispatchProps {
-  if (load) {
-    const action = loadModelDescriptionRequested(ownProps.match.params.id);
-    dispatch(action);
-  }
+  // load data for editor
+  const action = loadModelDescriptionRequested(ownProps.match.params.id);
+  dispatch(action);
 
   return {
-    onDataLoad: (modelId: string) => {
-      const action = loadModelDescriptionRequested(modelId);
-      return dispatch(action);
-    },
+    onDataLoad: (modelId: string) => null,
   };
 }
 

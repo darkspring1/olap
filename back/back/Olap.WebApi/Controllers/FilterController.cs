@@ -22,7 +22,7 @@ namespace Olap.WebApi.Controllers
             _mongoModelService = mongoModelService;
         }
 
-        [HttpGet("/filter")]
+        [HttpGet("/filter-values")]
         public async Task<IActionResult> Get([FromQuery]string[] systemNames)
         {
             if (systemNames?.Any() != true)
@@ -36,7 +36,7 @@ namespace Olap.WebApi.Controllers
                 return Error(Errors.FiltersAreNonExisten(nonExistenFilters));
             }
 
-            var filters = await Task.WhenAll(systemNames.Select(sn => _mongoModelService.LoadFilterAsync(sn)));
+            var filters = await Task.WhenAll(systemNames.Select(sn => _mongoModelService.LoadFilterValuesAsync(sn)));
 
             return Ok(filters);
        

@@ -42,9 +42,9 @@ const loadModelDescription = async (modelId: string): Promise<IModelDescription>
   }
 };
 
-const loadFilters = async (filterSystemVames: string[]): Promise<IFilterDescription[]> => {
+const loadFilterValues = async (filterSystemVames: string[]): Promise<IFilterDescription[]> => {
   try {
-    const response: AxiosResponse<IFilterDescription[]> = await apiClient.get('/filter',
+    const response: AxiosResponse<IFilterDescription[]> = await apiClient.get('/filter-values',
       {
         params: { systemNames: filterSystemVames },
         paramsSerializer: (params) => {
@@ -69,5 +69,5 @@ const loadFilters = async (filterSystemVames: string[]): Promise<IFilterDescript
 export {
   saveModelDescription,
   loadModelDescription,
-  loadFilters,
+  loadFilterValues,
 };

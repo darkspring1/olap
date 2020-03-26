@@ -5,12 +5,17 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable react/button-has-type */
 import * as React from 'react';
-import { IModelDescription } from '../../store/model';
+import { ModelDescriptionConverter, ICellDescription } from '../../store/model';
+import { Grid } from '../excel/grid';
+import { IFilterDescription } from '../../store/filter';
 
 // eslint-disable-next-line @typescript-eslint/interface-name-prefix
 interface IEditorOwnProps {
     readonly modelId: string;
-    modelDescription: IModelDescription;
+    readonly rowFilters: IFilterDescription;
+    readonly columnFilters: IFilterDescription;
+    // cells with formulas and hardcoded values
+    readonly cellsDescription: ICellDescription[];
 }
 
 interface IEditorDispatchProps {
@@ -25,26 +30,24 @@ class Editor extends React.Component<IEditorProps, {}> {
 
   constructor(props: IEditorOwnProps) {
     super(props);
-    this.modelName = props.modelName;
-  }
-
-  onSaveModel(): void {
-    const { onSaveModel } = this.props;
-    // onSaveModel(modelId, data);
+    this.modelName = '';
   }
 
   render() {
     const {
-      modelDescription,
+      rowFilters,
+      columnFilters,
     } = this.props;
 
-
-    if (!modelDescription) {
+    if (!rowFilters) {
       return <>loading...</>;
     }
+
+    const data = ModelDescriptionConverter.CreateData(rowFilters, columnFilters);
+
     return (
       <>
-        model view
+        <Grid data={data} />
       </>
     );
   }
