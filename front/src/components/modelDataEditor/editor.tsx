@@ -43,7 +43,7 @@ class Editor extends React.Component<IEditorProps, {}> {
       return <>loading...</>;
     }
 
-    const data = ModelDescriptionConverter.CreateData(rowFilters, columnFilters);
+    const data = ModelDescriptionConverter.CreateViewData(rowFilters, columnFilters);
 
     return (
       <>

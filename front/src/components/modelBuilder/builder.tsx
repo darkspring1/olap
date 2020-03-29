@@ -52,7 +52,7 @@ class Builder extends React.Component<IBuilderProps, IBuilderState> {
       return (<>loading...</>);
     }
 
-    const data = ModelDescriptionConverter.CreateData(rowFilter, columnFilter);
+    const data = ModelDescriptionConverter.CreateViewData(rowFilter, columnFilter);
 
     return (
       <>

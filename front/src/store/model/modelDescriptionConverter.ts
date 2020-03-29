@@ -55,7 +55,7 @@ export default class ModelDescriptionConverter {
     return rows;
   }
 
-  static CreateData(rowFilter: IFilterDescription, columnFilter: IFilterDescription): ICellDescription[][] {
+  static CreateViewData(rowFilter: IFilterDescription, columnFilter: IFilterDescription): ICellDescription[][] {
     const rowCount = rowFilter.values.length + 1;
     const columnCount = columnFilter.values.length + 1;
     const rows: Array<ICellDescription[]> = new Array(rowCount);
