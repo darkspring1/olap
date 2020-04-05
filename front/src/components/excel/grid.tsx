@@ -1,16 +1,15 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
 /* eslint-disable react/no-array-index-key */
-/* eslint-disable no-debugger */
 import * as React from 'react';
 import './grid.css';
 import CellViewModel from './cellViewModel';
 import Cell from './cell';
-import { ICellDescription } from '../../store/model/types';
+import ICellModel from './cellModel';
 
 interface IGridOwnProps {
   rowHeaders: string[];
   columnHeaders: string[];
-  data: ICellDescription[][];
+  data: ICellModel[][];
 }
 
 interface IGridState {
@@ -50,9 +49,9 @@ class Grid extends React.Component<IGridProps, IGridState> {
       i += 1;
     }
 
-    data.forEach((row: ICellDescription[], rIdx: number) => {
+    data.forEach((row: ICellModel[], rIdx: number) => {
       grid[rIdx] = new Array<CellViewModel>(row.length);
-      row.forEach((cell: ICellDescription, cIdx: number) => {
+      row.forEach((cell: ICellModel, cIdx: number) => {
         grid[rIdx][cIdx] = new CellViewModel(cell, grid);
       });
     });

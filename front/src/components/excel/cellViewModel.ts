@@ -1,7 +1,7 @@
-import { ICellDescription } from '../../store/model';
+import ICellModel from './cellModel';
 
 export default class CellViewModel {
-  constructor(cell: ICellDescription, grid: CellViewModel[][]) {
+  constructor(cell: ICellModel, grid: CellViewModel[][]) {
     this.cell = cell;
     this.editValue = cell.value || '';
     this.grid = grid;
@@ -9,7 +9,7 @@ export default class CellViewModel {
 
     readonly grid: CellViewModel[][]
 
-    readonly cell: ICellDescription;
+    readonly cell: ICellModel;
 
     isEditable: boolean;
 

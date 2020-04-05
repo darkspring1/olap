@@ -39,27 +39,12 @@ export default class ModelDescriptionConverter {
     return view;
   }
 
-  static CreateViewData(rowCount: number, columnCount: number): ICellDescription[][] {
-    const rows: ICellDescription[][] = [];
-    for (let i = 0; i < rowCount;) {
-      const r = new Array(columnCount);
-      for (let j = 0; j < columnCount;) {
-        r[j] = ModelDescriptionConverter.CreateCellDescription(null, null, i, j);
-        j += 1;
-      }
-      rows[i] = r;
-      i += 1;
-    }
-    return rows;
-  }
-
   static CreateEditorData(
     rowFilter: IFilterDescription,
     columnFilter: IFilterDescription,
     cellDescriptions: ICellDescription[],
     cells: ICell[],
   ): ICell[][] {
-
     const rowFilterValues = rowFilter.values;
     const colFilterValues = columnFilter.values;
 

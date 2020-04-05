@@ -3,6 +3,7 @@ import * as React from 'react';
 import { Grid } from '../excel/grid';
 import { IFilterDescription } from '../../store/filter';
 import { ModelDescriptionConverter, IModelDescription, ICellDescription } from '../../store/model';
+import ICellModel from '../excel/cellModel';
 
 interface IBuilderState {
   modelName: string;
@@ -43,6 +44,27 @@ class Builder extends React.Component<IBuilderProps, IBuilderState> {
     this.setState({ modelName: e.target.value });
   }
 
+  private createViewData(): ICellModel[][] {
+    const rows: ICellDescription[][] = [];
+    const { rowFilter, columnFilter } = this.props;
+
+    for (let i = 0; i < rowFilter.values.length;) {
+      const r = new Array(columnFilter.values.length);
+      for (let j = 0; j < columnFilter.values.length;) {
+        r[j] = {
+          rowIndex: i,
+          columnIndex: j,
+          value: null,
+          formula: null,
+        };
+        j += 1;
+      }
+      rows[i] = r;
+      i += 1;
+    }
+    return rows;
+  }
+
   render() {
     const { state } = this;
     const { onLoadData, rowFilter, columnFilter } = this.props;
@@ -55,7 +77,7 @@ class Builder extends React.Component<IBuilderProps, IBuilderState> {
     const rowHeaders = rowFilter.values.map((x) => x.name);
     const colHeaders = columnFilter.values.map((x) => x.name);
 
-    const data = ModelDescriptionConverter.CreateViewData(rowFilter.values.length, columnFilter.values.length);
+    const data = this.createViewData();
 
     return (
       <>
