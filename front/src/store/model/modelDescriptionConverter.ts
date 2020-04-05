@@ -28,8 +28,8 @@ export default class ModelDescriptionConverter {
     const rowCount = data.length;
     const columnCount = data[0].length;
 
-    for (let i = 1; i < rowCount; i += 1) {
-      for (let j = 1; j < columnCount; j += 1) {
+    for (let i = 0; i < rowCount; i += 1) {
+      for (let j = 0; j < columnCount; j += 1) {
         if (data[i][j].value || data[i][j].formula) {
           view.cellsDescription.push(data[i][j]);
         }
@@ -39,23 +39,11 @@ export default class ModelDescriptionConverter {
     return view;
   }
 
-  static CreateViewData(rowFilter: IFilterDescription, columnFilter: IFilterDescription): ICellDescription[][] {
-    const rowCount = rowFilter.values.length + 1;
-    const columnCount = columnFilter.values.length + 1;
-    const rows: Array<ICellDescription[]> = new Array(rowCount);
-
-    const r0 = new Array(columnCount);
-    r0[0] = ModelDescriptionConverter.CreateCellDescription(null, null, 0, 0);
-    for (let k = 1; k < columnCount;) {
-      r0[k] = ModelDescriptionConverter.CreateCellDescription(columnFilter.values[k - 1].name, null, 0, k);
-      k += 1;
-    }
-    rows[0] = r0;
-
-    for (let i = 1; i < rowCount;) {
+  static CreateViewData(rowCount: number, columnCount: number): ICellDescription[][] {
+    const rows: ICellDescription[][] = [];
+    for (let i = 0; i < rowCount;) {
       const r = new Array(columnCount);
-      r[0] = ModelDescriptionConverter.CreateCellDescription(rowFilter.values[i - 1].name, null, i, 0);
-      for (let j = 1; j < columnCount;) {
+      for (let j = 0; j < columnCount;) {
         r[j] = ModelDescriptionConverter.CreateCellDescription(null, null, i, j);
         j += 1;
       }

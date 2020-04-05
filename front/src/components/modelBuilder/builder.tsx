@@ -52,12 +52,15 @@ class Builder extends React.Component<IBuilderProps, IBuilderState> {
       return (<>loading...</>);
     }
 
-    const data = ModelDescriptionConverter.CreateViewData(rowFilter, columnFilter);
+    const rowHeaders = rowFilter.values.map((x) => x.name);
+    const colHeaders = columnFilter.values.map((x) => x.name);
+
+    const data = ModelDescriptionConverter.CreateViewData(rowFilter.values.length, columnFilter.values.length);
 
     return (
       <>
         <input type="text" value={state.modelName} onChange={this.onChange} />
-        <Grid data={data} />
+        <Grid data={data} rowHeaders={rowHeaders} columnHeaders={colHeaders} />
         <button onClick={() => this.onSaveModel(data)}>Save Model</button>
       </>
     );
