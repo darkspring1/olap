@@ -12,6 +12,7 @@ const apiClient = axios.create({
   },
 });
 
+interface ServerError { test: string }
 
 const saveModelDescription = async (modelDescription: IModelDescription): Promise<string> => {
   try {
@@ -20,7 +21,7 @@ const saveModelDescription = async (modelDescription: IModelDescription): Promis
   } catch (err) {
     if (err && err.response) {
       const axiosError = err as AxiosError<ServerError>;
-      return axiosError.response.data;
+      // return axiosError.response.data;
     }
 
     throw err;
@@ -35,7 +36,7 @@ const loadModelDescription = async (modelId: string): Promise<IModelDescription>
   } catch (err) {
     if (err && err.response) {
       const axiosError = err as AxiosError<ServerError>;
-      return axiosError.response.data;
+      // return axiosError.response.data;
     }
 
     throw err;
@@ -59,7 +60,7 @@ const loadFilterValues = async (filterSystemVames: string[]): Promise<IFilterDes
   } catch (err) {
     if (err && err.response) {
       const axiosError = err as AxiosError<ServerError>;
-      return axiosError.response.data;
+      // return axiosError.response.data;
     }
 
     throw err;

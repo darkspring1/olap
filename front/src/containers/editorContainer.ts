@@ -48,7 +48,8 @@ function mapDispatchToProps(dispatch: Redux.Dispatch<any>,
   dispatch(action);
 
   return {
-    onDataLoad: (modelId: string) => null,
+    onDataLoad: (modelId: string): void => null,
+    onSaveModel: (modelId: string, data: any[][]): void => null
   };
 }
 

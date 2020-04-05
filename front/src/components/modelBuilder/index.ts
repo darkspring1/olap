@@ -1,5 +1,5 @@
-import { Builder, IBuilderOwnProps, IBuilderDispatchedProps } from './builder.tsx';
+import { Builder, IBuilderProps } from './builder.tsx';
 
 export {
-  Builder, IBuilderOwnProps, IBuilderDispatchedProps,
+  Builder, IBuilderProps,
 };

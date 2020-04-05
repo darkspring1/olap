@@ -28,7 +28,7 @@ type IEditorProps = IEditorOwnProps & IEditorDispatchProps;
 class Editor extends React.Component<IEditorProps, {}> {
   modelName: string
 
-  constructor(props: IEditorOwnProps) {
+  constructor(props: IEditorProps) {
     super(props);
     this.modelName = '';
   }

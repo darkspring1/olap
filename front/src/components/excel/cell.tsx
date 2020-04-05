@@ -71,7 +71,16 @@ export default class Cell extends React.Component<ICellOwnProps, ICellState> {
     const { mode, editValue } = this.state;
     let markup;
     if (mode === CellMode.View || mode === CellMode.Active) {
-      markup = <td tabIndex="0" role="button" onClick={() => this.onClick()} onDoubleClick={() => this.onDoubleClick()}>{cellViewModel.cell.value}</td>;
+      markup = (
+        <td
+          tabIndex={0}
+          role="button"
+          onClick={() => this.onClick()}
+          onDoubleClick={() => this.onDoubleClick()}
+        >
+          {cellViewModel.cell.value}
+        </td>
+      );
     } else if (mode === CellMode.Edit) {
       markup = <td><input onBlur={this.onBlur} autoFocus type="text" value={editValue} onChange={this.onChange} /></td>;
     }

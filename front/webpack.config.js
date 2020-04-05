@@ -13,7 +13,7 @@ module.exports = {
   },
 
   entry: {
-      main: ['babel-polyfill', './src/index.jsx']
+      main: ['@babel/polyfill', './src/index.jsx']
   },
   mode: "development",
   devtool: "source-map",
@@ -34,11 +34,19 @@ module.exports = {
   
   module: {
     rules: [
-       
+      
       {
-        test: /\.(ts|js)x?$/,
+        test: /\.ts(x?)$/,
         exclude: /node_modules/,
-        use: ["babel-loader", "eslint-loader"]
+        use: [
+          'babel-loader', 'ts-loader'
+        ]
+      },
+
+      {
+        test: /\.js(x?)$/,
+        exclude: /node_modules/,
+        use: ['babel-loader', "eslint-loader"]
       },
      
       { 

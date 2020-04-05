@@ -5,17 +5,18 @@ import * as React from 'react';
 import './grid.css';
 import CellViewModel from './cellViewModel';
 import Cell from './cell.tsx';
+import { ICellDescription } from '../../store/model/types';
 
 interface IGridOwnProps {
-  data: ICell[][];
+  data: ICellDescription[][];
 }
 
 interface IGridState {
   grid: CellViewModel[][];
 }
 
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface IGridDispatchProps {
-    test(): void;
 }
 
 type IGridProps = IGridOwnProps & IGridDispatchProps;
@@ -47,9 +48,9 @@ class Grid extends React.Component<IGridProps, IGridState> {
       i += 1;
     }
 
-    data.forEach((row: ICell[], rIdx: number) => {
+    data.forEach((row: ICellDescription[], rIdx: number) => {
       grid[rIdx] = new Array<CellViewModel>(row.length);
-      row.forEach((cell: ICell, cIdx: number) => {
+      row.forEach((cell: ICellDescription, cIdx: number) => {
         grid[rIdx][cIdx] = new CellViewModel(cell, grid);
       });
     });

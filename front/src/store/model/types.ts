@@ -1,3 +1,5 @@
+import { IFilterValue } from '../filter';
+
 export const LOAD_MODEL_DESCRIPTION_REQUESTED = 'LOAD_MODEL_DESCRIPTION_REQUESTED';
 export const LOAD_MODEL_DESCRIPTION_SUCCEEDED = 'LOAD_MODEL_DESCRIPTION_SUCCEEDED';
 export const LOAD_MODEL_DESCRIPTION_FAILED = 'LOAD_MODEL_DESCRIPTION_FAILED';
@@ -10,15 +12,45 @@ export const SAVE_MODEL_DATA_REQUESTED = 'SAVE_MODEL_DATA_REQUESTED';
 export const SAVE_MODEL_DATA_SUCCEEDED = 'SAVE_MODEL_DATA_SUCCEEDED';
 export const SAVE_MODEL_DATA_FAILED = 'SAVE_MODEL_DATA_FAILED';
 
+
+// for view
 export interface ICellDescription {
 
-    readonly value: string;
+    value: string;
 
-    readonly formula: string;
+    formula: string;
 
     readonly rowIndex: number;
 
     readonly columnIndex: number;
+}
+
+// real cell with data
+export interface ICell {
+    readonly id: string;
+    readonly value: string;
+    readonly formula: string;
+    readonly filterValues: IFilterValue[];
+}
+
+export class CellWrap {
+  constructor(cell: ICell) {
+    this.cell = cell;
+  }
+
+      readonly cell: ICell;
+
+      private _cellDictionary: { [id: string]: IFilterValue };
+
+      ContainsFilterValue(filterValueId: string): boolean {
+        if (!this._cellDictionary) {
+          this._cellDictionary = {};
+          this.cell.filterValues.forEach((element) => {
+            this._cellDictionary[element.id] = element;
+          });
+        }
+        return !!this._cellDictionary[filterValueId];
+      }
 }
 
 export interface IView {

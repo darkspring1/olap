@@ -10,7 +10,7 @@ const initialState: IModelState = {
 };
 
 function reduceLoadModelDescription(action: IAction<IModelDescription>): IModelState {
-  return { description: action.payload };
+  return { description: action.payload, data: null };
 }
 
 export default (state: IModelState = initialState, action: IAction<any>): IModelState => {

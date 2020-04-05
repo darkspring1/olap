@@ -1,12 +1,10 @@
 /* eslint-disable no-underscore-dangle */
-import { applyMiddleware, compose, createStore } from 'redux';
+import { applyMiddleware, createStore } from 'redux';
+import { composeWithDevTools } from 'redux-devtools-extension';
 import createSagaMiddleware from 'redux-saga';
 import { createRootReducer } from './store';
 import rootSaga from './sagas';
 
-
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-// const composeEnhancers = compose;
 
 export default function configureStore(preloadedState: any) {
   const sagaMiddleware = createSagaMiddleware();
@@ -14,7 +12,7 @@ export default function configureStore(preloadedState: any) {
   const store = createStore(
     createRootReducer(), // root reducer with router state
     preloadedState,
-    composeEnhancers(
+    composeWithDevTools(
       applyMiddleware(
         sagaMiddleware,
       ),

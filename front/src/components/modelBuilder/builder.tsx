@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { Grid } from '../excel/grid';
 import { IFilterDescription } from '../../store/filter';
-import { ModelDescriptionConverter, IModelDescription } from '../../store/model';
+import { ModelDescriptionConverter, IModelDescription, ICellDescription } from '../../store/model';
 
 interface IBuilderState {
   modelName: string;
