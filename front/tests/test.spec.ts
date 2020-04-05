@@ -22,31 +22,34 @@ function createFilter(fName: string, valuesCount: number): IFilterDescription {
 }
 
 function createData(): void {
+  const expectedFormula1 = '=formula'
+  const expectedFormula2 = '=abc'
   const rowFilter = createFilter('row_filter', 2);
   const colFilter = createFilter('col_filter', 2);
   const cell: ICell = {
     id: uuid(),
     value: null,
-    formula: '=formula',
+    formula: expectedFormula1,
     filterValues: [rowFilter.values[0], colFilter.values[1]],
   };
 
   const cellDescription: ICellDescription = {
-    rowIndex: 0,
-    columnIndex: 2,
-    formula: '=abc',
+    rowIndex: 1,
+    columnIndex: 0,
+    formula: expectedFormula2,
     value: null,
   };
-  // eslint-disable-next-line no-debugger
-  debugger;
+
   const data: ICell[][] = ModelDescriptionConverter.CreateEditorData(
     rowFilter,
     colFilter,
     [cellDescription],
     [cell],
   );
-  debugger;
-  expect(data.length).to.equal(5);
+  
+  expect(data.length).to.equal(2);
+  expect(data[0][1].formula).to.equal(expectedFormula1);
+  expect(data[1][0].formula).to.equal(expectedFormula2);
 }
 
 // createData();

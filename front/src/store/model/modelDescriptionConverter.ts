@@ -59,11 +59,6 @@ export default class ModelDescriptionConverter {
     cellDescriptions: ICellDescription[],
     cells: ICell[],
   ): ICell[][] {
-    // persons["p1"] = { firstName: "F1", lastName: "L1" };
-    // persons["p2"] = { firstName: "F2" };
-
-    // eslint-disable-next-line no-debugger
-    debugger;
 
     const rowFilterValues = rowFilter.values;
     const colFilterValues = columnFilter.values;
@@ -97,24 +92,13 @@ export default class ModelDescriptionConverter {
       return ModelDescriptionConverter.CreateCell(null, null, filterVals);
     }
 
-    const rowCount = rowFilterValues.length + 1;
-    const columnCount = colFilterValues.length + 1;
+    const rowCount = rowFilterValues.length;
+    const columnCount = colFilterValues.length;
     const rows: Array<ICell[]> = new Array(rowCount);
 
-    // create row with headers
-    const r0 = new Array(columnCount);
-    r0[0] = ModelDescriptionConverter.CreateCell(null, null, null);
-    for (let k = 1; k < columnCount;) {
-      r0[k] = ModelDescriptionConverter.CreateCell(colFilterValues[k - 1].name, null, null);
-      k += 1;
-    }
-    rows[0] = r0;
-
-    for (let i = 1; i < rowCount;) {
+    for (let i = 0; i < rowCount;) {
       const r = new Array(columnCount);
-      // create row header
-      r[0] = ModelDescriptionConverter.CreateCell(rowFilterValues[i - 1].name, null, null);
-      for (let j = 1; j < columnCount;) {
+      for (let j = 0; j < columnCount;) {
         r[j] = cellCtor(i, j);
         j += 1;
       }

@@ -10,6 +10,16 @@
             "name": "Launch Chrome against localhost",
             "url": "http://localhost:9000",
             "webRoot": "${workspaceFolder}"
+        },
+        {
+            "name": "Current TS Tests File",
+            "type": "node",
+            "request": "launch",
+            "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
+            "args": ["-r", "ts-node/register", "${relativeFile}"],
+            "cwd": "${workspaceRoot}",
+            "protocol": "inspector",
+            "env": { "TS_NODE_PROJECT": "${workspaceRoot}/tsconfig.test.json" }
         }
     ]
 }
