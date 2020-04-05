@@ -11,11 +11,11 @@ import { IFilterDescription } from '../../store/filter';
 
 // eslint-disable-next-line @typescript-eslint/interface-name-prefix
 interface IEditorOwnProps {
-    readonly modelId: string;
-    readonly rowFilters: IFilterDescription;
-    readonly columnFilters: IFilterDescription;
-    // cells with formulas and hardcoded values
-    readonly cellsDescription: ICellDescription[];
+  readonly modelId: string;
+  readonly rowFilters: IFilterDescription;
+  readonly columnFilters: IFilterDescription;
+  // cells with formulas and hardcoded values
+  readonly cellsDescription: ICellDescription[];
 }
 
 interface IEditorDispatchProps {
@@ -54,5 +54,6 @@ class Editor extends React.Component<IEditorProps, {}> {
 }
 
 export {
+  // eslint-disable-next-line no-undef
   IEditorProps, IEditorOwnProps, IEditorDispatchProps, Editor,
 };

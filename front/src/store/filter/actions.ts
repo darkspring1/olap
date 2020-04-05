@@ -3,8 +3,8 @@ import {
   LOAD_FILTERS_REQUESTED,
   LOAD_FILTERS_SUCCEEDED,
   LOAD_FILTERS_FAILED,
+  IFilterDescription,
 } from './types';
-import { IFilterDescription } from '.';
 import IAction from '../iAction';
 
 

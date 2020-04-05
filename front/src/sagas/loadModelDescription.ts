@@ -1,5 +1,5 @@
 import { call, takeEvery, put } from 'redux-saga/effects';
-import { loadModelDescription } from 'api/api';
+import { loadModelDescription } from '../api/api';
 import { IAction } from '../store';
 import { LOAD_MODEL_DESCRIPTION_REQUESTED } from '../store/model/types';
 import { IModelDescription, loadModelDescriptionSucceeded, loadModelDescriptionFailed } from '../store/model';

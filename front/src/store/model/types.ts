@@ -16,21 +16,21 @@ export const SAVE_MODEL_DATA_FAILED = 'SAVE_MODEL_DATA_FAILED';
 // for view
 export interface ICellDescription {
 
-    value: string;
+  value: string;
 
-    formula: string;
+  formula: string;
 
-    readonly rowIndex: number;
+  readonly rowIndex: number;
 
-    readonly columnIndex: number;
+  readonly columnIndex: number;
 }
 
 // real cell with data
 export interface ICell {
-    readonly id: string;
-    readonly value: string;
-    readonly formula: string;
-    readonly filterValues: IFilterValue[];
+  readonly id: string;
+  readonly value: string;
+  readonly formula: string;
+  readonly filterValues: IFilterValue[];
 }
 
 export class CellWrap {
@@ -38,36 +38,36 @@ export class CellWrap {
     this.cell = cell;
   }
 
-      readonly cell: ICell;
+  readonly cell: ICell;
 
-      private _cellDictionary: { [id: string]: IFilterValue };
+  private _cellDictionary: { [id: string]: IFilterValue };
 
-      ContainsFilterValue(filterValueId: string): boolean {
-        if (!this._cellDictionary) {
-          this._cellDictionary = {};
-          this.cell.filterValues.forEach((element) => {
-            this._cellDictionary[element.id] = element;
-          });
-        }
-        return !!this._cellDictionary[filterValueId];
-      }
+  ContainsFilterValue(filterValueId: string): boolean {
+    if (!this._cellDictionary) {
+      this._cellDictionary = {};
+      this.cell.filterValues.forEach((element) => {
+        this._cellDictionary[element.id] = element;
+      });
+    }
+    return !!this._cellDictionary[filterValueId];
+  }
 }
 
 export interface IView {
-    readonly name: string;
-    readonly rowFilters: string[];
-    readonly columnFilters: string[];
-    // cells with formulas and hardcoded values
-    readonly cellsDescription: ICellDescription[];
+  readonly name: string;
+  readonly rowFilters: string[];
+  readonly columnFilters: string[];
+  // cells with formulas and hardcoded values
+  readonly cellsDescription: ICellDescription[];
 }
 
 export interface IModelDescription {
-    readonly name: string;
-    readonly defaultView: IView;
+  readonly name: string;
+  readonly defaultView: IView;
 // eslint-disable-next-line semi
 }
 
 export interface IModelState {
-    readonly description: IModelDescription;
-    readonly data: any;
+  readonly description: IModelDescription;
+  readonly data: any;
 }

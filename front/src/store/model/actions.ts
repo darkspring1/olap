@@ -6,8 +6,8 @@ import {
   SAVE_MODEL_DESCRIPTION_REQUESTED,
   SAVE_MODEL_DESCRIPTION_SUCCEEDED,
   SAVE_MODEL_DESCRIPTION_FAILED,
+  IModelDescription,
 } from './types';
-import { IModelDescription } from '.';
 import IAction from '../iAction';
 
 export function loadModelDescriptionRequested(modelId: string): IAction<string> {

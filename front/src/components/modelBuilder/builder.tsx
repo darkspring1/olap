@@ -9,9 +9,9 @@ interface IBuilderState {
 }
 
 export interface IBuilderOwnProps {
-    modelName: string;
-    rowFilter: IFilterDescription;
-    columnFilter: IFilterDescription;
+  modelName: string;
+  rowFilter: IFilterDescription;
+  columnFilter: IFilterDescription;
 }
 
 export interface IBuilderDispatchProps {
@@ -64,4 +64,5 @@ class Builder extends React.Component<IBuilderProps, IBuilderState> {
   }
 }
 
+// eslint-disable-next-line no-undef
 export { IBuilderProps, Builder };

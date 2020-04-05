@@ -9,17 +9,17 @@ export const LOAD_FILTERS_FAILED = 'LOAD_FILTERS_DESCRIPTION_FAILED';
 
 
 export interface IFilterValue {
-    readonly id: string;
-    readonly name: string;
-    readonly order: number;
+  readonly id: string;
+  readonly name: string;
+  readonly order: number;
 }
 
 export interface IFilterDescription {
-    readonly name: string;
-    readonly systemName: string;
-    readonly values: IFilterValue[];
+  readonly name: string;
+  readonly systemName: string;
+  readonly values: IFilterValue[];
 }
 
 export interface ISaveFiltersDescriptionRequest {
-    filters: IFilterDescription[];
+  filters: IFilterDescription[];
 }

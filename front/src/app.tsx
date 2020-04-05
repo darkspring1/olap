@@ -1,9 +1,8 @@
-/* eslint-disable react/prop-types */
 import React from 'react';
-import history from 'common/browserHistory';
-import EditorContainer from 'containers/editorContainer.ts';
 import { Router, Route, Switch } from 'react-router-dom';
-import BuilderContainer from './containers/builderContainer.ts';
+import BuilderContainer from './containers/builderContainer';
+import history from './common/browserHistory';
+import EditorContainer from './containers/editorContainer';
 
 export default () => (
   <main>

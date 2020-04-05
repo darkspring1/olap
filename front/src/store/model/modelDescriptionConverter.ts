@@ -1,6 +1,7 @@
 import { IFilterValue, IFilterDescription } from '../filter';
-import { IView, ICellDescription } from '.';
-import { ICell, CellWrap } from './types';
+import {
+  ICell, CellWrap, IView, ICellDescription,
+} from './types';
 import uuid from '../../common/uuid';
 
 
