@@ -11,14 +11,14 @@ interface ICellOwnProps {
 }
 
 enum CellMode {
-    View = 1,
-    Edit = 2,
-    Active = 3
+  View = 1,
+  Edit = 2,
+  Active = 3
 }
 
 interface ICellState {
-    mode: CellMode;
-    editValue: string;
+  mode: CellMode;
+  editValue: string;
 }
 
 export default class Cell extends React.Component<ICellOwnProps, ICellState> {

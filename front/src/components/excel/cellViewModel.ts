@@ -7,11 +7,11 @@ export default class CellViewModel {
     this.grid = grid;
   }
 
-    readonly grid: CellViewModel[][]
+  readonly grid: CellViewModel[][]
 
-    readonly cell: ICellModel;
+  readonly cell: ICellModel;
 
-    isEditable: boolean;
+  isEditable: boolean;
 
-    editValue: string;
+  editValue: string;
 }
