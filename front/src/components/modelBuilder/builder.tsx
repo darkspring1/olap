@@ -1,9 +1,10 @@
 /* eslint-disable react/button-has-type */
 import * as React from 'react';
 import { Grid } from '../excel/grid';
-import { IFilterDescription } from '../../store/filter';
+import { IFilterDescription, IFilterValue } from '../../store/filter';
 import { ModelDescriptionConverter, IModelDescription, ICellDescription } from '../../store/model';
 import ICellModel from '../excel/cellModel';
+import Filter, { IFilterProps } from '../filter/filter';
 
 interface IBuilderState {
   modelName: string;
@@ -13,6 +14,7 @@ export interface IBuilderOwnProps {
   modelName: string;
   rowFilter: IFilterDescription;
   columnFilter: IFilterDescription;
+  otherFilters: IFilterDescription[];
 }
 
 export interface IBuilderDispatchProps {
@@ -67,7 +69,9 @@ class Builder extends React.Component<IBuilderProps, IBuilderState> {
 
   render() {
     const { state } = this;
-    const { onLoadData, rowFilter, columnFilter } = this.props;
+    const {
+      onLoadData, rowFilter, columnFilter, otherFilters,
+    } = this.props;
 
     if (!rowFilter) {
       onLoadData();
@@ -79,8 +83,16 @@ class Builder extends React.Component<IBuilderProps, IBuilderState> {
 
     const data = this.createViewData();
 
+    const renderFilters = function (): any {
+      return otherFilters.map((f) => {
+        const fValues = f.values.map((x: IFilterValue): string => x.name);
+        return <Filter values={fValues} />;
+      });
+    };
+
     return (
       <>
+        {renderFilters()}
         <input type="text" value={state.modelName} onChange={this.onChange} />
         <Grid data={data} rowHeaders={rowHeaders} columnHeaders={colHeaders} />
         <button onClick={() => this.onSaveModel(data)}>Save Model</button>
