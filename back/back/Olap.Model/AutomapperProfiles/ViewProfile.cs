@@ -8,11 +8,13 @@ namespace Olap.Model.AutomapperProfiles
         public ViewProfile()
         {
             CreateMap<ViewDto, View>();
+            CreateMap<View, ViewDto>();
+
             CreateMap<FilterValueDto, FilterValue>();
-            CreateMap<CellDescriptionDto, CellDescription>();
+            CreateMap<CellDescriptionDto, CellDescription>()
+                .ReverseMap();
 
             CreateMap<ModelDescription, ModelDescriptionResponceDto>();
-            CreateMap<View, ViewDto>();
         }
     }
 }

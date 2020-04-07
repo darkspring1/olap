@@ -81,14 +81,14 @@ namespace Olap.Model
             return nonExistenFilters;
         }
 
-        public async Task<FilterValuesDto> LoadFilterValuesAsync(string systemName)
+        public async Task<FilterValuesCollection> LoadFilterValuesAsync(string filterSystemName)
         {
-            var values = await GetCollection<FilterValue>(systemName)
+            var values = await GetCollection<FilterValue>(filterSystemName)
                 .Find(new BsonDocument())
                 .SortBy(x => x.Order)
                 .ToListAsync();
 
-            return new FilterValuesDto(systemName, values);
+            return new FilterValuesCollection(filterSystemName, values);
         }
 
         public async Task<IEnumerable<string>> CreateFiltersAsync(FilterDescriptionDto[] dtos)

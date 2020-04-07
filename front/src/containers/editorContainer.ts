@@ -35,6 +35,7 @@ function mapStateToProps(state: IState, ownProps: OwnProps): IEditorOwnProps {
     cellsDescription: defaultView ? defaultView.cellsDescription : null,
     columnFilters,
     rowFilters,
+    cells: [],
   };
 
   return props;

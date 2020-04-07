@@ -1,6 +1,7 @@
-import { IFilterValue, IFilterDescription } from '../filter';
+// eslint-disable-next-line max-classes-per-file
+import { IFilterValue } from '../filter';
 import {
-  ICell, CellWrap, IView, ICellDescription,
+  ICell, IView, ICellDescription,
 } from './types';
 import uuid from '../../common/uuid';
 
@@ -37,59 +38,5 @@ export default class ModelDescriptionConverter {
     }
 
     return view;
-  }
-
-  static CreateEditorData(
-    rowFilter: IFilterDescription,
-    columnFilter: IFilterDescription,
-    cellDescriptions: ICellDescription[],
-    cells: ICell[],
-  ): ICell[][] {
-    const rowFilterValues = rowFilter.values;
-    const colFilterValues = columnFilter.values;
-
-    let cellsTmp = cells.map((c) => new CellWrap(c));
-    const cellDescriptionDictionary: { [id: string]: ICellDescription} = {};
-
-    cellDescriptions.forEach((elm: ICellDescription): void => {
-      const key = `${elm.rowIndex}_${elm.columnIndex}`;
-      cellDescriptionDictionary[key] = elm;
-    });
-
-    function cellCtor(rIndex: number, cIndex: number): ICell {
-      const rFilterVal = rowFilterValues[rIndex];
-      const cFilterVal = colFilterValues[cIndex];
-      const idx = cellsTmp.findIndex((item: CellWrap): boolean => item.ContainsFilterValue(rFilterVal.id) && item.ContainsFilterValue(cFilterVal.id));
-      if (idx !== -1) {
-        const result = cellsTmp[idx].cell;
-        cellsTmp = cellsTmp.slice(idx, 1);
-        return result;
-      }
-
-      const cellDescr = cellDescriptionDictionary[`${rIndex}_${cIndex}`];
-      const filterVals = [rFilterVal, cFilterVal];
-      // create from view
-      if (cellDescr) {
-        return ModelDescriptionConverter.CreateCell(cellDescr.value, cellDescr.formula, filterVals);
-      }
-
-      // create empty
-      return ModelDescriptionConverter.CreateCell(null, null, filterVals);
-    }
-
-    const rowCount = rowFilterValues.length;
-    const columnCount = colFilterValues.length;
-    const rows: Array<ICell[]> = new Array(rowCount);
-
-    for (let i = 0; i < rowCount;) {
-      const r = new Array(columnCount);
-      for (let j = 0; j < columnCount;) {
-        r[j] = cellCtor(i, j);
-        j += 1;
-      }
-      rows[i] = r;
-      i += 1;
-    }
-    return rows;
   }
 }

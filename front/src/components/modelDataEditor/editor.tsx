@@ -5,9 +5,12 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable react/button-has-type */
 import * as React from 'react';
-import { ModelDescriptionConverter, ICellDescription } from '../../store/model';
+import { ICellDescription } from '../../store/model';
 import { Grid } from '../excel/grid';
 import { IFilterDescription } from '../../store/filter';
+import { ICell } from '../../store/model/types';
+import ICellModel from '../excel/cellModel';
+import EditorHelper from './editorHelper';
 
 // eslint-disable-next-line @typescript-eslint/interface-name-prefix
 interface IEditorOwnProps {
@@ -16,6 +19,8 @@ interface IEditorOwnProps {
   readonly columnFilters: IFilterDescription;
   // cells with formulas and hardcoded values
   readonly cellsDescription: ICellDescription[];
+  // data cells
+  readonly cells: ICell[];
 }
 
 interface IEditorDispatchProps {
@@ -33,6 +38,16 @@ class Editor extends React.Component<IEditorProps, {}> {
     this.modelName = '';
   }
 
+  CreateViewData(): ICellModel[][] {
+    const {
+      rowFilters,
+      columnFilters,
+      cellsDescription,
+      cells,
+    } = this.props;
+    return EditorHelper.CreateEditorData(rowFilters, columnFilters, cellsDescription, cells);
+  }
+
   render() {
     const {
       rowFilters,
@@ -43,11 +58,14 @@ class Editor extends React.Component<IEditorProps, {}> {
       return <>loading...</>;
     }
 
-    const data = ModelDescriptionConverter.CreateViewData(rowFilters, columnFilters);
+    const rowHeaders = rowFilters.values.map((x) => x.name);
+    const colHeaders = columnFilters.values.map((x) => x.name);
+
+    const data = this.CreateViewData();
 
     return (
       <>
-        <Grid data={data} />
+        <Grid data={data} rowHeaders={rowHeaders} columnHeaders={colHeaders} />
       </>
     );
   }

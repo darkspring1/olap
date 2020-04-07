@@ -26,11 +26,11 @@ namespace Olap.Model.ModelBuilder
     }
 
 
-    public class FilterValuesDto
+    public class FilterValuesCollection
     {
-        public FilterValuesDto(string systemName, IEnumerable<FilterValue> filterValues)
+        public FilterValuesCollection(string filterSystemName, IEnumerable<FilterValue> filterValues)
         {
-            SystemName = systemName;
+            SystemName = filterSystemName;
             Values = filterValues;
         }
 
