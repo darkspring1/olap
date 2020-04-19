@@ -7,17 +7,13 @@ import { IAction } from '../store';
 import { LOAD_FILTERS_REQUESTED } from '../store/filter/types';
 
 
-export function* loadFilters(filterSystemNames: string[]) {
+function* loadFiltersWorker(action: IAction<string[]>) {
   try {
-    const response: IFilterDescription[] = yield call(loadFilterValues, filterSystemNames);
+    const response: IFilterDescription[] = yield call(loadFilterValues, action.payload);
     yield put(loadFiltersSucceeded(response));
   } catch (e) {
     yield put(loadFiltersFailed());
   }
-}
-
-function* loadFiltersWorker(action: IAction<string[]>) {
-  yield loadFilters(action.payload);
 }
 
 export default function* loadFiltersSaga() {

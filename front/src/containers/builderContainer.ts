@@ -6,9 +6,9 @@ import { IBuilderDispatchProps, IBuilderOwnProps, Builder } from '../components/
 import { loadFiltersRequested, IFilterDescription } from '../store/filter';
 import { IState } from '../store';
 
-const fyFilterSystemName = 'f_4ff2cd71-7abe-431b-b2e9-fef48637d056';
-const rowFilterSystemName = 'f_6e019251-b27a-4499-85f3-ca2578c5a7a3';
-const colFilterSystemName = 'f_a1c18c15-e28b-4448-811f-98d52a4f43bf';
+const fyFilterSystemName = 'f_77ddfb85-af47-4cad-9c42-c5c14aeff00c';
+const rowFilterSystemName = 'f_675da1b3-b3a9-44ca-8092-3fed6cbeb3f5';
+const colFilterSystemName = 'f_ae1dd3c5-b91b-4f42-a74c-6d5a940ea3ee';
 
 function mapStateToProps(state: IState, ownProps: any): IBuilderOwnProps {
   let rowFilter: IFilterDescription = null;
@@ -29,7 +29,7 @@ function mapStateToProps(state: IState, ownProps: any): IBuilderOwnProps {
     modelName: 'New model',
     rowFilter,
     columnFilter,
-    otherFilters: [fyFilter],
+    filters: [fyFilter],
   };
 }
 

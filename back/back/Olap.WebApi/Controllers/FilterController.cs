@@ -14,12 +14,12 @@ namespace Olap.WebApi.Controllers
     public class FilterController : BaseApiController
     {
         private readonly IMapper _mapper;
-        private readonly MongoModelService _mongoModelService;
+        private readonly MongoFilterService _mongoFilterService;
 
-        public FilterController(IMapper mapper, MongoModelService mongoModelService, ILogger<FilterController> logger) : base(logger)
+        public FilterController(IMapper mapper, MongoFilterService mongoFilterService, ILogger<FilterController> logger) : base(logger)
         {
             _mapper = mapper;
-            _mongoModelService = mongoModelService;
+            _mongoFilterService = mongoFilterService;
         }
 
         [HttpGet("/filter-values")]
@@ -30,13 +30,13 @@ namespace Olap.WebApi.Controllers
                 return Error(Errors.Required(nameof(systemNames)));
             }
 
-            var nonExistenFilters = await _mongoModelService.GetNonExistentFiltesr(systemNames);
+            var nonExistenFilters = await _mongoFilterService.GetNonExistentFiltesr(systemNames);
             if (nonExistenFilters.Any())
             {
                 return Error(Errors.FiltersAreNonExisten(nonExistenFilters));
             }
 
-            var filters = await Task.WhenAll(systemNames.Select(sn => _mongoModelService.LoadFilterValuesAsync(sn)));
+            var filters = await Task.WhenAll(systemNames.Select(sn => _mongoFilterService.LoadFilterValuesAsync(sn)));
 
             return Ok(filters);
        
@@ -47,7 +47,7 @@ namespace Olap.WebApi.Controllers
         [HttpPost("/filter")]
         public Task<IEnumerable<string>> PostFilter(FilterDescriptionDto[] filters)
         {
-            return _mongoModelService.CreateFiltersAsync(filters);
+            return _mongoFilterService.CreateFiltersAsync(filters);
         }
 
 

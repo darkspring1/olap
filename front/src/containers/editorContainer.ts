@@ -2,43 +2,60 @@ import { connect } from 'react-redux';
 import * as Redux from 'redux';
 import { withRouter } from 'react-router-dom';
 import { IState } from '../store';
-import { IEditorOwnProps, Editor, IEditorDispatchProps } from '../components/modelDataEditor/editor';
+import {
+  IEditorOwnProps, Editor, IEditorDispatchProps, IFilterModel, IViewModel,
+} from '../components/modelDataEditor/editor';
 import { loadModelDescriptionRequested } from '../store/model';
-import { IFilterDescription, loadFiltersRequested } from '../store/filter';
+import { IFilterDescription } from '../store/filter';
+import { ICell, ILoadCellsPayload, ICellFilterValue } from '../store/cell/types';
+import { loadCellsRequested, saveCellsRequested } from '../store/cell/actions';
 
 
+let viewId: string = null;
 type OwnProps = {
   match: {
     params: {
       id: string;
     };
   };
-  loadModelDescription: boolean;
 };
 
 function mapStateToProps(state: IState, ownProps: OwnProps): IEditorOwnProps {
   const { description } = state.model;
+  const { cells } = state;
   let rowFilters: IFilterDescription = null;
   let columnFilters: IFilterDescription = null;
+  let filters: IFilterModel[] = null;
   const defaultView = description ? description.defaultView : null;
 
   if (!defaultView) {
-    // eslint-disable-next-line no-param-reassign
-    ownProps.loadModelDescription = true;
-  } else {
-    rowFilters = state.filters.find((x) => x.systemName === defaultView.rowFilters[0]);
-    columnFilters = state.filters.find((x) => x.systemName === defaultView.columnFilters[0]);
+    return {
+      view: null,
+      cells,
+    };
   }
 
-  const props: IEditorOwnProps = {
-    modelId: ownProps.match.params.id,
+  viewId = defaultView.id;
+  rowFilters = state.filters.find((x) => x.systemName === defaultView.rowFilters[0]);
+  columnFilters = state.filters.find((x) => x.systemName === defaultView.columnFilters[0]);
+
+  filters = state
+    .filters
+    .filter((x) => x.systemName === defaultView.filters[0])
+    .map((f): IFilterModel => ({ selectedId: f.values[0].id, selectedIndex: 0, filter: f }));
+
+
+  const viewModel: IViewModel = {
     cellsDescription: defaultView ? defaultView.cellsDescription : null,
     columnFilters,
     rowFilters,
-    cells: [],
+    filters,
   };
 
-  return props;
+  return {
+    view: viewModel,
+    cells,
+  };
 }
 
 
@@ -49,8 +66,14 @@ function mapDispatchToProps(dispatch: Redux.Dispatch<any>,
   dispatch(action);
 
   return {
-    onDataLoad: (modelId: string): void => null,
-    onSaveModel: (modelId: string, data: any[][]): void => null,
+    onCellsLoad: (filters: IFilterModel[]): void => {
+      const filterValues = filters.map((x): ICellFilterValue => ({ filterSystemName: x.filter.systemName, id: x.selectedId }));
+      const payload: ILoadCellsPayload = { viewId, filterValues };
+      dispatch(loadCellsRequested(payload));
+    },
+    onSave: (cells: ICell[]): void => {
+      dispatch(saveCellsRequested({ modelId: ownProps.match.params.id, cells }));
+    },
   };
 }
 

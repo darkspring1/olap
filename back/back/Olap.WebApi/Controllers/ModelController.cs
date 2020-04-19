@@ -24,7 +24,7 @@ namespace Olap.WebApi.Controllers
         }
 
         [HttpGet("/model/description/{modelId}")]
-        public Task<ModelDescriptionResponceDto> Get(string modelId)
+        public Task<ModelDescriptionResponceDto> Get(Guid modelId)
         {
             return _mongoModelService.LoadModelDescriptionAsync(modelId);
         }

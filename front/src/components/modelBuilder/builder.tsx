@@ -4,7 +4,7 @@ import { Grid } from '../excel/grid';
 import { IFilterDescription, IFilterValue } from '../../store/filter';
 import { ModelDescriptionConverter, IModelDescription, ICellDescription } from '../../store/model';
 import ICellModel from '../excel/cellModel';
-import Filter, { IFilterProps } from '../filter/filter';
+import FilterSelect, { IFilterOption } from '../filter/filter';
 
 interface IBuilderState {
   modelName: string;
@@ -14,7 +14,7 @@ export interface IBuilderOwnProps {
   modelName: string;
   rowFilter: IFilterDescription;
   columnFilter: IFilterDescription;
-  otherFilters: IFilterDescription[];
+  filters: IFilterDescription[];
 }
 
 export interface IBuilderDispatchProps {
@@ -33,10 +33,18 @@ class Builder extends React.Component<IBuilderProps, IBuilderState> {
   }
 
   onSaveModel(data: ICellDescription[][]): void {
-    const { onSaveModel, rowFilter, columnFilter } = this.props;
+    const {
+      onSaveModel, rowFilter, columnFilter, filters,
+    } = this.props;
     const { modelName } = this.state;
 
-    const defaultView = ModelDescriptionConverter.CreateView('default', [rowFilter.systemName], [columnFilter.systemName], data);
+    const defaultView = ModelDescriptionConverter.CreateView(
+      'default',
+      [rowFilter.systemName],
+      [columnFilter.systemName],
+      filters.map((x: IFilterDescription) => x.systemName),
+      data,
+    );
 
     const modelDescription: IModelDescription = { name: modelName, defaultView };
     onSaveModel(modelDescription);
@@ -47,7 +55,7 @@ class Builder extends React.Component<IBuilderProps, IBuilderState> {
   }
 
   private createViewData(): ICellModel[][] {
-    const rows: ICellDescription[][] = [];
+    const rows: ICellModel[][] = [];
     const { rowFilter, columnFilter } = this.props;
 
     for (let i = 0; i < rowFilter.values.length;) {
@@ -70,7 +78,7 @@ class Builder extends React.Component<IBuilderProps, IBuilderState> {
   render() {
     const { state } = this;
     const {
-      onLoadData, rowFilter, columnFilter, otherFilters,
+      onLoadData, rowFilter, columnFilter, filters,
     } = this.props;
 
     if (!rowFilter) {
@@ -78,15 +86,15 @@ class Builder extends React.Component<IBuilderProps, IBuilderState> {
       return (<>loading...</>);
     }
 
-    const rowHeaders = rowFilter.values.map((x) => x.name);
-    const colHeaders = columnFilter.values.map((x) => x.name);
+    const rowHeaders = rowFilter.values.map((x) => x.value);
+    const colHeaders = columnFilter.values.map((x) => x.value);
 
     const data = this.createViewData();
 
     const renderFilters = function (): any {
-      return otherFilters.map((f) => {
-        const fValues = f.values.map((x: IFilterValue): string => x.name);
-        return <Filter values={fValues} />;
+      return filters.map((f) => {
+        const fValues = f.values.map((x: IFilterValue): IFilterOption<IFilterValue> => ({ id: x.id, name: x.value }));
+        return <FilterSelect<IFilterValue> key={f.systemName} values={fValues} />;
       });
     };
 

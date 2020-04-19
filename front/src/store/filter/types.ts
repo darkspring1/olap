@@ -10,7 +10,7 @@ export const LOAD_FILTERS_FAILED = 'LOAD_FILTERS_DESCRIPTION_FAILED';
 
 export interface IFilterValue {
   readonly id: string;
-  readonly name: string;
+  readonly value: string;
   readonly order: number;
 }
 

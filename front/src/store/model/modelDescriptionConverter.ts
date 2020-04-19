@@ -1,9 +1,10 @@
 // eslint-disable-next-line max-classes-per-file
-import { IFilterValue } from '../filter';
+
 import {
-  ICell, IView, ICellDescription,
+  IView, ICellDescription,
 } from './types';
 import uuid from '../../common/uuid';
+import { ICellFilterValue, ICell } from '../cell/types';
 
 
 export default class ModelDescriptionConverter {
@@ -13,7 +14,7 @@ export default class ModelDescriptionConverter {
     };
   }
 
-  private static CreateCell(value: string, formula: string, filterValues: IFilterValue[]): ICell {
+  private static CreateCell(value: string, formula: string, filterValues: ICellFilterValue[]): ICell {
     return {
       id: uuid(),
       value,
@@ -22,9 +23,20 @@ export default class ModelDescriptionConverter {
     };
   }
 
-  static CreateView(name: string, rowFilters: string[], columnFilters: string[], data: ICellDescription[][]): IView {
+  static CreateView(
+    name: string,
+    rowFilters: string[],
+    columnFilters: string[],
+    filters: string[],
+    data: ICellDescription[][],
+  ): IView {
     const view: IView = {
-      name, rowFilters, columnFilters, cellsDescription: [],
+      id: null,
+      filters,
+      name,
+      rowFilters,
+      columnFilters,
+      cellsDescription: [],
     };
     const rowCount = data.length;
     const columnCount = data[0].length;

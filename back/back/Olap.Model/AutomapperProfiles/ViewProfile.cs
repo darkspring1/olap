@@ -7,6 +7,9 @@ namespace Olap.Model.AutomapperProfiles
     {
         public ViewProfile()
         {
+            CreateMap<CellDto, Cell>();
+            CreateMap<CellFilterValueDto, CellFilterValue>();
+
             CreateMap<ViewDto, View>();
             CreateMap<View, ViewDto>();
 

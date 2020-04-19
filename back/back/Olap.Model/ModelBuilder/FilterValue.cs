@@ -11,13 +11,13 @@ namespace Olap.Model.ModelBuilder
         }
 
         public Guid Id { get; set; }
-        public string Name { get; set; }
+        public string Value { get; set; }
         public int Order { get; set; }
     }
 
     public class FilterValueDto
     {
-        public string Name { get; set; }
+        public string Value { get; set; }
         public int Order { get; set; }
     }
 }

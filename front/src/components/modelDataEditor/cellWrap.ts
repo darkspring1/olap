@@ -1,5 +1,4 @@
-import { ICell } from '../../store/model/types';
-import { IFilterValue } from '../../store/filter';
+import { ICell, ICellFilterValue } from '../../store/cell/types';
 
 export default class CellWrap {
   constructor(cell: ICell) {
@@ -8,7 +7,7 @@ export default class CellWrap {
 
   readonly cell: ICell;
 
-  private _cellDictionary: { [id: string]: IFilterValue };
+  private _cellDictionary: { [id: string]: ICellFilterValue };
 
   ContainsFilterValue(filterValueId: string): boolean {
     if (!this._cellDictionary) {

@@ -36,7 +36,9 @@ namespace Olap.WebApi
             BsonDefaults.GuidRepresentation = GuidRepresentation.Standard;
 
             services
+                .AddTransient<MongoFilterService>()
                 .AddTransient<MongoModelService>()
+                .AddTransient<MongoCellService>()
                 .AddTransient<DbConnection>(sp => new NpgsqlConnection(Configuration.GetConnectionString("DefaultConnection")))
                 .AddTransient<MongoClient>(sp => {
                     return new MongoClient(Configuration.GetConnectionString("MongoConnection"));

@@ -19,6 +19,8 @@ namespace Olap.Model.ModelBuilder
 
         public string[] ColumnFilters { get; set; }
 
+        public string[] Filters { get; set; }
+
         public IEnumerable<CellDescription> CellsDescription { get; set; }
 
         // IEnumerable<ICellInfo> IView.CellsInfo => this.CellsInfo;
@@ -27,11 +29,15 @@ namespace Olap.Model.ModelBuilder
 
     public class ViewDto
     {
+        public Guid Id { get; set; }
+
         public string Name { get; set; }
 
         public string[] RowFilters { get; set; }
 
         public string[] ColumnFilters { get; set; }
+
+        public string[] Filters { get; set; }
 
         public IEnumerable<CellDescriptionDto> CellsDescription { get; set; }
 

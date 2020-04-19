@@ -3,6 +3,7 @@ import axios, { AxiosResponse, AxiosError } from 'axios';
 import ApiSettings from '../globals.ts';
 import { IModelDescription } from '../store/model';
 import { IFilterDescription } from '../store/filter';
+import { ICellFilterValue, ICell } from '../store/cell/types';
 
 const apiClient = axios.create({
   baseURL: `${ApiSettings.Schema}://${ApiSettings.Host}:${ApiSettings.Port}`,
@@ -28,6 +29,20 @@ const saveModelDescription = async (modelDescription: IModelDescription): Promis
   }
 };
 
+const loadCells = async (viewId: string, filterValues: ICellFilterValue[]): Promise<string> => {
+  const response: AxiosResponse<string> = await apiClient.post<string>(`/cells/${viewId}`, filterValues);
+  return response.data;
+};
+
+const saveCells = async (modelId: string, cells: ICell[]): Promise<string> => {
+  // eslint-disable-next-line no-debugger
+  debugger;
+  const response: AxiosResponse<string> = await apiClient.post<string>('/cells', {
+    modelId,
+    cells,
+  });
+  return response.data;
+};
 
 const loadModelDescription = async (modelId: string): Promise<IModelDescription> => {
   try {
@@ -71,4 +86,6 @@ export {
   saveModelDescription,
   loadModelDescription,
   loadFilterValues,
+  loadCells,
+  saveCells,
 };

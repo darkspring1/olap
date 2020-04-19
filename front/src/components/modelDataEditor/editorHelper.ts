@@ -1,13 +1,15 @@
 // eslint-disable-next-line max-classes-per-file
 import { IFilterDescription } from '../../store/filter';
 import { ICellDescription } from '../../store/model';
-import { ICell } from '../../store/model/types';
+import { ICell } from '../../store/cell/types';
 import ICellModel from '../excel/cellModel';
 import CellWrap from './cellWrap';
+import uuidv4 from '../../common/uuid';
 
 export default class EditorHelper {
-  private static CreateCell(value: string, formula: string, rowIndex: number, columnIndex: number): ICellModel {
+  private static CreateCell(id: string, value: string, formula: string, rowIndex: number, columnIndex: number): ICellModel {
     return {
+      id,
       value,
       formula,
       rowIndex,
@@ -39,18 +41,18 @@ export default class EditorHelper {
       if (idx !== -1) {
         const result = cellsTmp[idx].cell;
         cellsTmp = cellsTmp.slice(idx, 1);
-        return EditorHelper.CreateCell(result.value, result.formula, rIndex, cIndex);
+        return EditorHelper.CreateCell(result.id, result.value, result.formula, rIndex, cIndex);
       }
 
       const cellDescr = cellDescriptionDictionary[`${rIndex}_${cIndex}`];
       // const filterVals = [rFilterVal, cFilterVal];
       // create from view
       if (cellDescr) {
-        return EditorHelper.CreateCell(cellDescr.value, cellDescr.formula, rIndex, cIndex);
+        return EditorHelper.CreateCell(uuidv4(), cellDescr.value, cellDescr.formula, rIndex, cIndex);
       }
 
       // create empty
-      return EditorHelper.CreateCell(null, null, rIndex, cIndex);
+      return EditorHelper.CreateCell(uuidv4(), null, null, rIndex, cIndex);
     }
 
     const rowCount = rowFilterValues.length;

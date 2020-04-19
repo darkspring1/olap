@@ -1,6 +1,8 @@
-﻿namespace Olap.Model.ModelBuilder
+﻿using System;
+
+namespace Olap.Model.ModelBuilder
 {
-   
+
     public class CellDescription
     {
         public string Value { get; set; }
@@ -27,4 +29,5 @@
 
         // filterValues: string[];
     }
+
 }

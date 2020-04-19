@@ -12,9 +12,6 @@ interface IGridOwnProps {
   data: ICellModel[][];
 }
 
-interface IGridState {
-  grid: CellViewModel[][];
-}
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface IGridDispatchProps {
@@ -24,16 +21,13 @@ type IGridProps = IGridOwnProps & IGridDispatchProps;
 
 const Alpha = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
-class Grid extends React.Component<IGridProps, IGridState> {
+class Grid extends React.Component<IGridProps, { }> {
   _alphaHeaders: string[];
 
-  // eslint-disable-next-line no-useless-constructor
   constructor(props: IGridProps) {
     super(props);
 
     const { data } = this.props;
-
-    const grid: CellViewModel[][] = new Array<Array<CellViewModel>>();
 
     this._alphaHeaders = new Array(data[0].length);
 
@@ -48,6 +42,16 @@ class Grid extends React.Component<IGridProps, IGridState> {
 
       i += 1;
     }
+  }
+
+  render() {
+    const { rowHeaders, columnHeaders, data } = this.props;
+    const gridRow = function (cells: CellViewModel[]) {
+      return (cells.map((cell: CellViewModel) => <Cell key={cell.cell.columnIndex} cellViewModel={cell} />)
+      );
+    };
+
+    const grid: CellViewModel[][] = new Array<Array<CellViewModel>>();
 
     data.forEach((row: ICellModel[], rIdx: number) => {
       grid[rIdx] = new Array<CellViewModel>(row.length);
@@ -55,17 +59,6 @@ class Grid extends React.Component<IGridProps, IGridState> {
         grid[rIdx][cIdx] = new CellViewModel(cell, grid);
       });
     });
-
-    this.state = { grid };
-  }
-
-  render() {
-    const { grid } = this.state;
-    const { rowHeaders, columnHeaders } = this.props;
-    const gridRow = function (cells: CellViewModel[]) {
-      return (cells.map((cell: CellViewModel) => <Cell key={cell.cell.columnIndex} cellViewModel={cell} />)
-      );
-    };
 
     return (
       <table className="excel-grid">
@@ -78,12 +71,12 @@ class Grid extends React.Component<IGridProps, IGridState> {
           <tr>
             <th className="header" />
             <th className="header" />
-            {this._alphaHeaders.map((header: string, hIdx: number) => <th className="header" key={hIdx}>{header}</th>)}
+            {this._alphaHeaders.map((header: string) => <th className="header" key={header}>{header}</th>)}
           </tr>
         </thead>
         <tbody>
           { grid.map((row: CellViewModel[], rIdx: number) => (
-            <tr key={rIdx}>
+            <tr key={row[0].cell.rowIndex}>
               <td className="header">{ rowHeaders[rIdx] }</td>
               <td className="header">{rIdx + 1}</td>
               {gridRow(row)}

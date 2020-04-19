@@ -1,4 +1,5 @@
 export default interface ICellModel {
+  readonly id: string;
 
   value: string;
 
