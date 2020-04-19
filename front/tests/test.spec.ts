@@ -21,7 +21,7 @@ function createFilter(fName: string, valuesCount: number): IFilterDescription {
 }
 
 function createCellFilter(filter: IFilterDescription, index: number): ICellFilterValue {
-  return { filterSystemName: filter.systemName, id: filter.values[index].id };
+  return { filterSystemName: filter.systemName, filterValueId: filter.values[index].id };
 }
 
 function createData(): void {

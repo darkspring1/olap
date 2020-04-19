@@ -5,12 +5,12 @@ import { saveCells } from '../api/api';
 import { IAction } from '../store';
 import { loadModelDescriptionFailed } from '../store/model';
 import { SAVE_CELLS_REQUESTED, ISaveCellsPayload } from '../store/cell/types';
-import { loadCellsSucceeded } from '../store/cell/actions';
+import { saveCellsSucceeded } from '../store/cell/actions';
 
 function* saveCellsWorker(action: IAction<ISaveCellsPayload>) {
   try {
-    const cellsResponse = yield call(saveCells, action.payload.modelId, action.payload.cells);
-    yield put(loadCellsSucceeded(cellsResponse));
+    yield call(saveCells, action.payload.modelId, action.payload.cells);
+    yield put(saveCellsSucceeded());
   } catch (e) {
     yield put(loadModelDescriptionFailed());
   }

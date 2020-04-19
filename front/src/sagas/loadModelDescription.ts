@@ -24,7 +24,7 @@ function* loadModelDescriptionWorker(action: IAction<string>) {
 
     const cellFilterValues = viewFilters.map((x): ICellFilterValue => ({
       filterSystemName: x.systemName,
-      id: x.values[0].id,
+      filterValueId: x.values[0].id,
     }));
 
     const cellsResponse = yield call(loadCells, response.defaultView.id, cellFilterValues);

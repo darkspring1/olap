@@ -3,12 +3,13 @@ import * as Redux from 'redux';
 import { withRouter } from 'react-router-dom';
 import { IState } from '../store';
 import {
-  IEditorOwnProps, Editor, IEditorDispatchProps, IFilterModel, IViewModel,
+  IEditorOwnProps, IEditorDispatchProps, IViewProps,
 } from '../components/modelDataEditor/editor';
 import { loadModelDescriptionRequested } from '../store/model';
 import { IFilterDescription } from '../store/filter';
 import { ICell, ILoadCellsPayload, ICellFilterValue } from '../store/cell/types';
 import { loadCellsRequested, saveCellsRequested } from '../store/cell/actions';
+import EditorWrap from './editorWrap';
 
 
 let viewId: string = null;
@@ -25,7 +26,7 @@ function mapStateToProps(state: IState, ownProps: OwnProps): IEditorOwnProps {
   const { cells } = state;
   let rowFilters: IFilterDescription = null;
   let columnFilters: IFilterDescription = null;
-  let filters: IFilterModel[] = null;
+  let filters: IFilterDescription[] = null;
   const defaultView = description ? description.defaultView : null;
 
   if (!defaultView) {
@@ -41,11 +42,10 @@ function mapStateToProps(state: IState, ownProps: OwnProps): IEditorOwnProps {
 
   filters = state
     .filters
-    .filter((x) => x.systemName === defaultView.filters[0])
-    .map((f): IFilterModel => ({ selectedId: f.values[0].id, selectedIndex: 0, filter: f }));
+    .filter((x) => x.systemName === defaultView.filters[0]);
 
 
-  const viewModel: IViewModel = {
+  const viewModel: IViewProps = {
     cellsDescription: defaultView ? defaultView.cellsDescription : null,
     columnFilters,
     rowFilters,
@@ -66,8 +66,7 @@ function mapDispatchToProps(dispatch: Redux.Dispatch<any>,
   dispatch(action);
 
   return {
-    onCellsLoad: (filters: IFilterModel[]): void => {
-      const filterValues = filters.map((x): ICellFilterValue => ({ filterSystemName: x.filter.systemName, id: x.selectedId }));
+    onCellsLoad: (filterValues: ICellFilterValue[]): void => {
       const payload: ILoadCellsPayload = { viewId, filterValues };
       dispatch(loadCellsRequested(payload));
     },
@@ -81,4 +80,4 @@ function mapDispatchToProps(dispatch: Redux.Dispatch<any>,
 export default withRouter(connect(
   mapStateToProps,
   mapDispatchToProps,
-)(Editor));
+)(EditorWrap));

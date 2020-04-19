@@ -18,7 +18,7 @@ export interface ISaveCellsPayload {
 
 export interface ICellFilterValue {
   readonly filterSystemName: string;
-  readonly id: string;
+  readonly filterValueId: string;
 }
 
 // real cell with data

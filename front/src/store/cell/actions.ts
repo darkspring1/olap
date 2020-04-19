@@ -42,10 +42,10 @@ export function saveCellsRequested(payload: ISaveCellsPayload): IAction<ISaveCel
 }
 
 
-export function saveCellsSucceeded(payload: ICell[]): IAction<ICell[]> {
+export function saveCellsSucceeded(): IAction<ICell[]> {
   return {
     type: SAVE_CELLS_SUCCEEDED,
-    payload,
+    payload: null,
   };
 }
 

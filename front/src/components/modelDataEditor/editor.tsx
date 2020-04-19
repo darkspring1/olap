@@ -1,4 +1,3 @@
-/* eslint-disable no-debugger */
 /* eslint-disable jsx-a11y/no-autofocus */
 /* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable class-methods-use-this */
@@ -13,37 +12,30 @@ import ICellModel from '../excel/cellModel';
 import EditorHelper from './editorHelper';
 import FilterSelect, { IFilterOption } from '../filter/filter';
 
-export interface IFilterModel
-{
-  selectedId: string;
-  selectedIndex: number;
-  readonly filter: IFilterDescription;
-}
-
-export interface IViewModel {
+export interface IViewProps {
   readonly rowFilters: IFilterDescription;
   readonly columnFilters: IFilterDescription;
   // cells with formulas and hardcoded values
   readonly cellsDescription: ICellDescription[];
-  readonly filters: IFilterModel[];
+  readonly filters: IFilterDescription[];
 }
 
 // eslint-disable-next-line @typescript-eslint/interface-name-prefix
 interface IEditorOwnProps {
   // data cells
   readonly cells: ICell[];
-  readonly view: IViewModel;
+  readonly view: IViewProps;
 }
 
 interface IEditorDispatchProps {
-  onCellsLoad: (filters: IFilterModel[]) => void;
+  onCellsLoad: (filters: ICellFilterValue[]) => void;
   onSave: (data: ICell[]) => void;
 }
 
 type IEditorProps = IEditorOwnProps & IEditorDispatchProps;
 
 interface IEditorState {
-  data: ICellModel[][];
+  filters: { [id: string]: string };
 }
 
 class Editor extends React.Component<IEditorProps, IEditorState> {
@@ -56,12 +48,23 @@ class Editor extends React.Component<IEditorProps, IEditorState> {
     this.modelName = '';
     this.save = this.save.bind(this);
     this.change = this.change.bind(this);
+
+
+    const filters: { [id: string]: string } = {};
+
+    props
+      .view
+      .filters.forEach((x) => {
+        filters[x.systemName] = x.values[0].id;
+      });
+
+    this.state = { filters };
   }
 
   getCellFilterValue(f: IFilterDescription, valIdx: number): ICellFilterValue {
     return {
       filterSystemName: f.systemName,
-      id: f.values[valIdx].id,
+      filterValueId: f.values[valIdx].id,
     };
   }
 
@@ -70,11 +73,13 @@ class Editor extends React.Component<IEditorProps, IEditorState> {
       view,
     } = this.props;
 
+    const { filters } = this.state;
+
     const {
-      rowFilters, columnFilters, filters,
+      rowFilters, columnFilters,
     } = view;
 
-    const result = filters.map((f) => this.getCellFilterValue(f.filter, f.selectedIndex));
+    const result = view.filters.map((f): ICellFilterValue => ({ filterSystemName: f.systemName, filterValueId: filters[f.systemName] }));
     const rFilter = this.getCellFilterValue(rowFilters, cell.rowIndex);
     const cFilter = this.getCellFilterValue(columnFilters, cell.columnIndex);
 
@@ -109,12 +114,15 @@ class Editor extends React.Component<IEditorProps, IEditorState> {
   }
 
   change(filterSystemName: string, selectedId: string): void {
-    const { onCellsLoad, view } = this.props;
-    const { filters } = view;
-    const selected = filters.find((x) => x.filter.systemName === filterSystemName);
-    selected.selectedIndex = selected.filter.values.findIndex((v) => v.id === selectedId);
-    selected.selectedId = selectedId;
-    onCellsLoad(filters);
+    const { onCellsLoad } = this.props;
+    const { filters } = this.state;
+    filters[filterSystemName] = selectedId;
+
+    const cellFilters = Object
+      .keys(filters)
+      .map((k): ICellFilterValue => ({ filterSystemName: k, filterValueId: filters[filterSystemName] }));
+
+    onCellsLoad(cellFilters);
   }
 
   render() {
@@ -122,10 +130,6 @@ class Editor extends React.Component<IEditorProps, IEditorState> {
       cells,
       view,
     } = this.props;
-
-    if (!view) {
-      return <>loading...</>;
-    }
 
     const {
       rowFilters,
@@ -139,12 +143,12 @@ class Editor extends React.Component<IEditorProps, IEditorState> {
     const colHeaders = columnFilters.values.map((x) => x.value);
 
     const renderFilters = (): any => filters.map((f) => {
-      const fValues = f.filter.values.map((x: IFilterValue): IFilterOption<IFilterValue> => ({ id: x.id, name: x.value }));
+      const fValues = f.values.map((x: IFilterValue): IFilterOption<IFilterValue> => ({ id: x.id, name: x.value }));
       return (
         <FilterSelect
-          key={f.filter.systemName}
+          key={f.systemName}
           values={fValues}
-          onchange={(selectedId: string): void => this.change(f.filter.systemName, selectedId)}
+          onchange={(selectedId: string): void => this.change(f.systemName, selectedId)}
         />
       );
     });

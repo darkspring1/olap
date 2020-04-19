@@ -35,8 +35,6 @@ const loadCells = async (viewId: string, filterValues: ICellFilterValue[]): Prom
 };
 
 const saveCells = async (modelId: string, cells: ICell[]): Promise<string> => {
-  // eslint-disable-next-line no-debugger
-  debugger;
   const response: AxiosResponse<string> = await apiClient.post<string>('/cells', {
     modelId,
     cells,

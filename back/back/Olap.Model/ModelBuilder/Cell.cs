@@ -19,7 +19,7 @@ namespace Olap.Model.ModelBuilder
     public class CellFilterValue
     {
         public string FilterSystemName { get; set; }
-        public Guid Id { get; set; }
+        public Guid FilterValueId { get; set; }
     }
 
 
@@ -38,6 +38,6 @@ namespace Olap.Model.ModelBuilder
     public class CellFilterValueDto
     {
         public string FilterSystemName { get; set; }
-        public Guid Id { get; set; }
+        public Guid FilterValueId { get; set; }
     }
 }

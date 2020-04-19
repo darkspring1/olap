@@ -45,14 +45,14 @@ namespace Olap.Model
 
             var filterList = new List<BsonDocument>();
 
-            foreach (var rf in rValuesTask.Result)
+            foreach (var rowFilterVal in rValuesTask.Result)
             {
-                var rCellFilter = new CellFilterValue { FilterSystemName = rFilterSystemName, Id = rf.Id };
+                var rCellFilter = new CellFilterValue { FilterSystemName = rFilterSystemName, FilterValueId = rowFilterVal.Id };
 
                 var rCellFilterBson = toBsonCellFilter(rCellFilter);
-                foreach (var cf in cValuesTask.Result)
+                foreach (var columnFilterVal in cValuesTask.Result)
                 {
-                    var cCellFilter = new CellFilterValue { FilterSystemName = cFilterSystemName, Id = cf.Id };
+                    var cCellFilter = new CellFilterValue { FilterSystemName = cFilterSystemName, FilterValueId = columnFilterVal.Id };
                     var cCellFilterBson = toBsonCellFilter(cCellFilter);
 
                     var list = new List<BsonDocument> { rCellFilterBson, rCellFilterBson };

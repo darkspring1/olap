@@ -13,7 +13,7 @@ export default class CellWrap {
     if (!this._cellDictionary) {
       this._cellDictionary = {};
       this.cell.filterValues.forEach((element) => {
-        this._cellDictionary[element.id] = element;
+        this._cellDictionary[element.filterValueId] = element;
       });
     }
     return !!this._cellDictionary[filterValueId];
