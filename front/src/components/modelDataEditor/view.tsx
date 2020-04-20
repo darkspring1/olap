@@ -12,7 +12,8 @@ import ICellModel from '../excel/cellModel';
 import EditorHelper from './editorHelper';
 import FilterSelect, { IFilterOption } from '../filter/filter';
 
-export interface IViewProps {
+interface IViewOwnProps {
+  readonly cells: ICell[];
   readonly rowFilters: IFilterDescription;
   readonly columnFilters: IFilterDescription;
   // cells with formulas and hardcoded values
@@ -20,32 +21,22 @@ export interface IViewProps {
   readonly filters: IFilterDescription[];
 }
 
-// eslint-disable-next-line @typescript-eslint/interface-name-prefix
-interface IEditorOwnProps {
-  // data cells
-  readonly cells: ICell[];
-  readonly view: IViewProps;
-}
-
-interface IEditorDispatchProps {
+interface IViewDispatchProps {
   onCellsLoad: (filters: ICellFilterValue[]) => void;
   onSave: (data: ICell[]) => void;
 }
 
-type IEditorProps = IEditorOwnProps & IEditorDispatchProps;
+type IViewProps = IViewOwnProps & IViewDispatchProps;
 
-interface IEditorState {
+interface IViewState {
   filters: { [id: string]: string };
 }
 
-class Editor extends React.Component<IEditorProps, IEditorState> {
-  modelName: string
-
+class View extends React.Component<IViewProps, IViewState> {
   data: ICellModel[][];
 
-  constructor(props: IEditorProps) {
+  constructor(props: IViewProps) {
     super(props);
-    this.modelName = '';
     this.save = this.save.bind(this);
     this.change = this.change.bind(this);
 
@@ -53,7 +44,6 @@ class Editor extends React.Component<IEditorProps, IEditorState> {
     const filters: { [id: string]: string } = {};
 
     props
-      .view
       .filters.forEach((x) => {
         filters[x.systemName] = x.values[0].id;
       });
@@ -70,16 +60,15 @@ class Editor extends React.Component<IEditorProps, IEditorState> {
 
   getFilters(cell: ICellModel): ICellFilterValue[] {
     const {
-      view,
+      rowFilters,
+      columnFilters,
+      filters: propsFilters,
     } = this.props;
 
     const { filters } = this.state;
 
-    const {
-      rowFilters, columnFilters,
-    } = view;
 
-    const result = view.filters.map((f): ICellFilterValue => ({ filterSystemName: f.systemName, filterValueId: filters[f.systemName] }));
+    const result = propsFilters.map((f): ICellFilterValue => ({ filterSystemName: f.systemName, filterValueId: filters[f.systemName] }));
     const rFilter = this.getCellFilterValue(rowFilters, cell.rowIndex);
     const cFilter = this.getCellFilterValue(columnFilters, cell.columnIndex);
 
@@ -128,16 +117,14 @@ class Editor extends React.Component<IEditorProps, IEditorState> {
   render() {
     const {
       cells,
-      view,
-    } = this.props;
-
-    const {
       rowFilters,
       columnFilters,
       filters,
       cellsDescription,
-    } = view;
+    } = this.props;
 
+    // eslint-disable-next-line no-debugger
+    debugger;
     this.data = EditorHelper.CreateEditorData(rowFilters, columnFilters, cellsDescription, cells);
     const rowHeaders = rowFilters.values.map((x) => x.value);
     const colHeaders = columnFilters.values.map((x) => x.value);
@@ -165,5 +152,6 @@ class Editor extends React.Component<IEditorProps, IEditorState> {
 
 export {
   // eslint-disable-next-line no-undef
-  IEditorProps, IEditorOwnProps, IEditorDispatchProps, Editor,
+  IViewProps, IViewOwnProps, IViewDispatchProps,
+  View,
 };

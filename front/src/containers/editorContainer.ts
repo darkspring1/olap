@@ -3,8 +3,8 @@ import * as Redux from 'redux';
 import { withRouter } from 'react-router-dom';
 import { IState } from '../store';
 import {
-  IEditorOwnProps, IEditorDispatchProps, IViewProps,
-} from '../components/modelDataEditor/editor';
+  IViewOwnProps, IViewDispatchProps, IViewProps,
+} from '../components/modelDataEditor/view';
 import { loadModelDescriptionRequested } from '../store/model';
 import { IFilterDescription } from '../store/filter';
 import { ICell, ILoadCellsPayload, ICellFilterValue } from '../store/cell/types';
@@ -21,7 +21,7 @@ type OwnProps = {
   };
 };
 
-function mapStateToProps(state: IState, ownProps: OwnProps): IEditorOwnProps {
+function mapStateToProps(state: IState, ownProps: OwnProps): IViewOwnProps {
   const { description } = state.model;
   const { cells } = state;
   let rowFilters: IFilterDescription = null;
@@ -31,7 +31,10 @@ function mapStateToProps(state: IState, ownProps: OwnProps): IEditorOwnProps {
 
   if (!defaultView) {
     return {
-      view: null,
+      rowFilters: null,
+      columnFilters: null,
+      cellsDescription: null,
+      filters: null,
       cells,
     };
   }
@@ -44,23 +47,18 @@ function mapStateToProps(state: IState, ownProps: OwnProps): IEditorOwnProps {
     .filters
     .filter((x) => x.systemName === defaultView.filters[0]);
 
-
-  const viewModel: IViewProps = {
+  return {
     cellsDescription: defaultView ? defaultView.cellsDescription : null,
     columnFilters,
     rowFilters,
     filters,
-  };
-
-  return {
-    view: viewModel,
     cells,
   };
 }
 
 
 function mapDispatchToProps(dispatch: Redux.Dispatch<any>,
-  ownProps: OwnProps): IEditorDispatchProps {
+  ownProps: OwnProps): IViewDispatchProps {
   // load data for editor
   const action = loadModelDescriptionRequested(ownProps.match.params.id);
   dispatch(action);
