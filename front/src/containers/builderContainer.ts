@@ -15,10 +15,10 @@ function mapStateToProps(state: IState, ownProps: any): IBuilderOwnProps {
   let columnFilter: IFilterDescription = null;
   let fyFilter: IFilterDescription = null;
 
-  if (state.filters.length === 3) {
-    fyFilter = state.filters.find((x) => x.systemName === fyFilterSystemName);
-    columnFilter = state.filters.find((x) => x.systemName === colFilterSystemName);
-    rowFilter = state.filters.find((x) => x.systemName === rowFilterSystemName);
+  if (Object.keys(state.filters).length === 3) {
+    fyFilter = state.filters[fyFilterSystemName];
+    columnFilter = state.filters[colFilterSystemName];
+    rowFilter = state.filters[rowFilterSystemName];
 
     if (!(fyFilter && columnFilter && rowFilterSystemName)) {
       throw new Error('now filters');

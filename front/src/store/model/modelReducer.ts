@@ -6,11 +6,10 @@ import IAction from '../iAction';
 
 const initialState: IModelState = {
   description: null,
-  data: null,
 };
 
 function reduceLoadModelDescription(action: IAction<IModelDescription>): IModelState {
-  return { description: action.payload, data: null };
+  return { description: action.payload };
 }
 
 export default (state: IModelState = initialState, action: IAction<any>): IModelState => {

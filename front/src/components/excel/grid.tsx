@@ -5,13 +5,13 @@ import './grid.css';
 import CellViewModel from './cellViewModel';
 import Cell from './cell';
 import ICellModel from './cellModel';
+import { IPivotHeaderGrouped } from './PivotHeaderGroup';
 
 interface IGridOwnProps {
-  rowHeaders: string[];
-  columnHeaders: string[];
+  rowPivotGroupedHeaders: IPivotHeaderGrouped[];
+  columnPivotGroupedHeaders: IPivotHeaderGrouped[];
   data: ICellModel[][];
 }
-
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface IGridDispatchProps {
@@ -45,7 +45,25 @@ class Grid extends React.Component<IGridProps, { }> {
   }
 
   render() {
-    const { rowHeaders, columnHeaders, data } = this.props;
+    const { rowPivotGroupedHeaders, columnPivotGroupedHeaders, data } = this.props;
+
+    // eslint-disable-next-line no-debugger
+    debugger;
+
+    let colHeaderSubs: IPivotHeaderGrouped[] = [];
+
+    columnPivotGroupedHeaders.forEach((g) => {
+      const c = g.Ungroup();
+      colHeaderSubs = colHeaderSubs.concat(c[0]);
+    });
+
+    let rowHeaders: IPivotHeaderGrouped[][] = [];
+
+    rowPivotGroupedHeaders.forEach((g) => {
+      const ungrouped = g.Ungroup();
+      rowHeaders = rowHeaders.concat(ungrouped);
+    });
+
     const gridRow = function (cells: CellViewModel[]) {
       return (cells.map((cell: CellViewModel) => <Cell key={cell.cell.columnIndex} cellViewModel={cell} />)
       );
@@ -60,24 +78,38 @@ class Grid extends React.Component<IGridProps, { }> {
       });
     });
 
+    function renderRowHeaders(idx: number): any {
+      return rowHeaders[idx].map((h) => {
+        // if (h.childCount === 0) {
+        //   return (<td className="header">{ h.filterValue }</td>);
+        // }
+
+        // if (idx % h.childCount === 0) {
+        //   return (<td className="header" rowSpan={h.childCount}>{ h.filterValue }</td>);
+        // }
+
+        return (<td className="header">{ h.filterValue }</td>);
+      });
+    }
+
     return (
       <table className="excel-grid">
         <thead>
           <tr>
             <th className="header" />
-            <th className="header" />
-            {columnHeaders.map((header: string, hIdx: number) => <th className="header" key={hIdx}>{header}</th>)}
+            { rowHeaders[0].map(() => (<th className="header" />)) }
+            { colHeaderSubs.map((header, hIdx) => <th className="header" key={hIdx}>{header.filterValue}</th>)}
           </tr>
           <tr>
             <th className="header" />
-            <th className="header" />
+            { rowHeaders[0].map(() => (<th className="header" />)) }
             {this._alphaHeaders.map((header: string) => <th className="header" key={header}>{header}</th>)}
           </tr>
         </thead>
         <tbody>
           { grid.map((row: CellViewModel[], rIdx: number) => (
             <tr key={row[0].cell.rowIndex}>
-              <td className="header">{ rowHeaders[rIdx] }</td>
+              { renderRowHeaders(rIdx) }
               <td className="header">{rIdx + 1}</td>
               {gridRow(row)}
             </tr>

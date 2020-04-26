@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
@@ -25,6 +26,6 @@ namespace Olap.Model.ModelBuilder
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
-        public ViewDto DefaultView { get; set; }
+        public IEnumerable<ViewDto> Views { get; set; }
     }
 }

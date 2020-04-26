@@ -34,11 +34,10 @@ export interface IView {
 
 export interface IModelDescription {
   readonly name: string;
-  readonly defaultView: IView;
+  readonly views: IView[];
 // eslint-disable-next-line semi
 }
 
 export interface IModelState {
   readonly description: IModelDescription;
-  readonly data: any;
 }

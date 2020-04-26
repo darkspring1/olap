@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import { expect } from 'chai';
 import 'mocha';
 
@@ -7,6 +8,7 @@ import uuid from '../src/common/uuid';
 import ICellModel from '../src/components/excel/cellModel';
 import EditorHelper from '../src/components/modelDataEditor/editorHelper';
 import { ICellFilterValue, ICell } from '../src/store/cell/types';
+import { IPivotHeaderGrouped } from '../src/components/excel/PivotHeaderGroup';
 
 function createFilter(fName: string, valuesCount: number): IFilterDescription {
   const values: IFilterValue[] = [];
@@ -44,9 +46,12 @@ function createData(): void {
     value: null,
   };
 
+  const rPivotHeaders = EditorHelper.GetGroupedHeaders([rowFilter]);
+  const cPivotHeaders = EditorHelper.GetGroupedHeaders([colFilter]);
+
   const data: ICellModel[][] = EditorHelper.CreateEditorData(
-    rowFilter,
-    colFilter,
+    rPivotHeaders,
+    cPivotHeaders,
     [cellDescription],
     [cell],
   );
@@ -56,7 +61,38 @@ function createData(): void {
   expect(data[1][0].formula).to.equal(expectedFormula2);
 }
 
+
+function groupTest(): void {
+  const f1 = createFilter('row_filter', 2);
+  const f2 = createFilter('col_filter', 2);
+
+  const groups = EditorHelper.GetGroupedHeaders([f1, f2]);
+  expect(groups.length).to.equal(2);
+
+  function expectGroup(h: IPivotHeaderGrouped, i: number, f: IFilterDescription): void {
+    expect(h.filterSystemName).to.eq(f.systemName);
+    expect(h.filterValueId).to.eq(f.values[i].id);
+    expect(h.filterValue).to.eq(f.values[i].value);
+  }
+
+  groups.forEach((g, i) => {
+    expectGroup(g, i, f1);
+    g.childs.forEach((cg, j) => expectGroup(cg, j, f2));
+  });
+}
+
+function getPivotHeaders(): void {
+  const f1 = createFilter('filter1', 2);
+  const f2 = createFilter('filter2', 2);
+
+  const groups = EditorHelper.GetGroupedHeaders([f1, f2]);
+  const headers = EditorHelper.GetPivotHeades(groups);
+  expect(headers.length).to.eq(4);
+}
+
 // eslint-disable-next-line no-undef
 describe('model editor', () => {
   it('create data', createData);
+  it('group pivot headers', groupTest);
+  it('get pivot headers', getPivotHeaders);
 });

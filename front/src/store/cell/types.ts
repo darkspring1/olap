@@ -16,6 +16,11 @@ export interface ISaveCellsPayload {
   readonly cells: ICell[];
 }
 
+export interface ICellsState {
+  readonly viewId: string;
+  readonly cells: ICell[];
+}
+
 export interface ICellFilterValue {
   readonly filterSystemName: string;
   readonly filterValueId: string;

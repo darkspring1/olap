@@ -2,6 +2,7 @@
 using MongoDB.Driver;
 using Olap.Model.ModelBuilder;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Olap.Model
@@ -9,11 +10,11 @@ namespace Olap.Model
 
     public class MongoModelService : BaseMongoService
     {
-        private async Task<View> LoadViewAsync(Guid modelId)
+        private async Task<IEnumerable<View>> LoadViewAsync(Guid modelId)
         {
             var filter = Builders<View>.Filter.Eq(nameof(View.ModelId), modelId);
             var cursor = await ViewCollection.FindAsync(filter);
-            return await cursor.SingleAsync();
+            return await cursor.ToListAsync();
         }
 
         public MongoModelService(IMapper mapper, MongoClient mongoClient) : base(mapper, mongoClient)
@@ -28,7 +29,7 @@ namespace Olap.Model
             await Task.WhenAll(mdTask, vTask);
 
             var dto = mapper.Map<ModelDescriptionResponceDto>(mdTask.Result);
-            dto.DefaultView = mapper.Map<ViewDto>(vTask.Result);
+            dto.Views = mapper.Map<IEnumerable<ViewDto>>(vTask.Result);
 
             return dto;
         }

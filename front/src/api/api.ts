@@ -29,8 +29,8 @@ const saveModelDescription = async (modelDescription: IModelDescription): Promis
   }
 };
 
-const loadCells = async (viewId: string, filterValues: ICellFilterValue[]): Promise<string> => {
-  const response: AxiosResponse<string> = await apiClient.post<string>(`/cells/${viewId}`, filterValues);
+const loadCells = async (viewId: string, filterValues: ICellFilterValue[]): Promise<ICell[]> => {
+  const response: AxiosResponse<ICell[]> = await apiClient.post<ICell[]>(`/cells/${viewId}`, filterValues);
   return response.data;
 };
 

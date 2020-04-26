@@ -9,6 +9,7 @@ import {
   SAVE_CELLS_SUCCEEDED,
   SAVE_CELLS_FAILED,
   ISaveCellsPayload,
+  ICellsState,
 } from './types';
 
 import IAction from '../iAction';
@@ -20,7 +21,7 @@ export function loadCellsRequested(payload: ILoadCellsPayload): IAction<ILoadCel
   };
 }
 
-export function loadCellsSucceeded(payload: ICell[]): IAction<ICell[]> {
+export function loadCellsSucceeded(payload: ICellsState): IAction<ICellsState> {
   return {
     type: LOAD_CELLS_SUCCEEDED,
     payload,

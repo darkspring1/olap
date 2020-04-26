@@ -14,8 +14,8 @@ import FilterSelect, { IFilterOption } from '../filter/filter';
 
 interface IViewOwnProps {
   readonly cells: ICell[];
-  readonly rowFilters: IFilterDescription;
-  readonly columnFilters: IFilterDescription;
+  readonly rowFilters: IFilterDescription[];
+  readonly columnFilters: IFilterDescription[];
   // cells with formulas and hardcoded values
   readonly cellsDescription: ICellDescription[];
   readonly filters: IFilterDescription[];
@@ -69,11 +69,11 @@ class View extends React.Component<IViewProps, IViewState> {
 
 
     const result = propsFilters.map((f): ICellFilterValue => ({ filterSystemName: f.systemName, filterValueId: filters[f.systemName] }));
-    const rFilter = this.getCellFilterValue(rowFilters, cell.rowIndex);
-    const cFilter = this.getCellFilterValue(columnFilters, cell.columnIndex);
+    // const rFilter = this.getCellFilterValue(rowFilters, cell.rowIndex);
+    // const cFilter = this.getCellFilterValue(columnFilters, cell.columnIndex);
 
-    result.push(rFilter);
-    result.push(cFilter);
+    // result.push(rFilter);
+    // result.push(cFilter);
     return result;
   }
 
@@ -123,11 +123,9 @@ class View extends React.Component<IViewProps, IViewState> {
       cellsDescription,
     } = this.props;
 
-    // eslint-disable-next-line no-debugger
-    debugger;
-    this.data = EditorHelper.CreateEditorData(rowFilters, columnFilters, cellsDescription, cells);
-    const rowHeaders = rowFilters.values.map((x) => x.value);
-    const colHeaders = columnFilters.values.map((x) => x.value);
+    const rPivotHeaders = EditorHelper.GetGroupedHeaders(rowFilters);
+    const cPivotHeaders = EditorHelper.GetGroupedHeaders(columnFilters);
+    this.data = EditorHelper.CreateEditorData(rPivotHeaders, cPivotHeaders, cellsDescription, cells);
 
     const renderFilters = (): any => filters.map((f) => {
       const fValues = f.values.map((x: IFilterValue): IFilterOption<IFilterValue> => ({ id: x.id, name: x.value }));
@@ -143,7 +141,7 @@ class View extends React.Component<IViewProps, IViewState> {
     return (
       <>
         {renderFilters()}
-        <Grid data={this.data} rowHeaders={rowHeaders} columnHeaders={colHeaders} />
+        <Grid data={this.data} rowPivotGroupedHeaders={rPivotHeaders} columnPivotGroupedHeaders={cPivotHeaders} />
         <button onClick={this.save}>Save data</button>
       </>
     );

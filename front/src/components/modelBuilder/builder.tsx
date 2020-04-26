@@ -5,6 +5,7 @@ import { IFilterDescription, IFilterValue } from '../../store/filter';
 import { ModelDescriptionConverter, IModelDescription, ICellDescription } from '../../store/model';
 import ICellModel from '../excel/cellModel';
 import FilterSelect, { IFilterOption } from '../filter/filter';
+import EditorHelper from '../modelDataEditor/editorHelper';
 
 interface IBuilderState {
   modelName: string;
@@ -46,7 +47,7 @@ class Builder extends React.Component<IBuilderProps, IBuilderState> {
       data,
     );
 
-    const modelDescription: IModelDescription = { name: modelName, defaultView };
+    const modelDescription: IModelDescription = { name: modelName, views: [defaultView] };
     onSaveModel(modelDescription);
   }
 
@@ -86,8 +87,8 @@ class Builder extends React.Component<IBuilderProps, IBuilderState> {
       return (<>loading...</>);
     }
 
-    const rowHeaders = rowFilter.values.map((x) => x.value);
-    const colHeaders = columnFilter.values.map((x) => x.value);
+    const rPivotHeaders = EditorHelper.GetGroupedHeaders([rowFilter]);
+    const cPivotHeaders = EditorHelper.GetGroupedHeaders([columnFilter]);
 
     const data = this.createViewData();
 
@@ -102,7 +103,7 @@ class Builder extends React.Component<IBuilderProps, IBuilderState> {
       <>
         {renderFilters()}
         <input type="text" value={state.modelName} onChange={this.onChange} />
-        <Grid data={data} rowHeaders={rowHeaders} columnHeaders={colHeaders} />
+        <Grid data={data} rowPivotGroupedHeaders={rPivotHeaders} columnPivotGroupedHeaders={cPivotHeaders} />
         <button onClick={() => this.onSaveModel(data)}>Save Model</button>
       </>
     );

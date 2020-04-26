@@ -2,12 +2,23 @@ import IAction from '../iAction';
 import { LOAD_FILTERS_SUCCEEDED } from './types';
 import { IFilterDescription } from '.';
 
-const initialState: IFilterDescription[] = [];
+type StateType = { [id: string]: IFilterDescription };
 
-export default (state: IFilterDescription[] = initialState, action: IAction<any>): IFilterDescription[] => {
+function saveToStore(state: StateType, payload: IFilterDescription[]): StateType {
+  payload.forEach((d) => {
+    // eslint-disable-next-line no-param-reassign
+    state[d.systemName] = d;
+  });
+
+  return { ...state };
+}
+
+const initialState: StateType = {};
+
+export default (state: StateType = initialState, action: IAction<any>): StateType => {
   switch (action.type) {
     case LOAD_FILTERS_SUCCEEDED:
-      return action.payload;
+      return saveToStore(state, action.payload);
 
     default:
       return state;
