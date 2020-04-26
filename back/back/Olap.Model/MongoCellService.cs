@@ -9,59 +9,99 @@ using System.Threading.Tasks;
 
 namespace Olap.Model
 {
-
     public class MongoCellService : BaseMongoService
     {
-        private readonly MongoModelService mongoModelService;
 
-      
-
-        public MongoCellService(MongoModelService mongoModelService, IMapper mapper, MongoClient mongoClient) : base(mapper, mongoClient)
+        private PivotHeaderGrouped[] BuildGrouped(int i, int j, FilterValuesCollection[] filters)
         {
-            this.mongoModelService = mongoModelService;
+            if (i >= filters.Length)
+            {
+                return Array.Empty<PivotHeaderGrouped>();
+            }
+            var f = filters[i];
+            return f.Values.Select(fv =>
+            {
+                var childs = BuildGrouped(j, j + 1, filters);
+                return new PivotHeaderGrouped(f.SystemName, fv.Id, childs);
+            }).ToArray();
         }
 
+        private List<List<PivotHeaderGrouped>> GetPivotHeades(FilterValuesCollection[] filters)
+        {
+            var groupedHeaders = BuildGrouped(0, 1, filters);
+
+            var result = new List<List<PivotHeaderGrouped>>();
+
+            foreach (var g in groupedHeaders)
+            {
+                result.AddRange(g.ToGrid());
+            }
+
+            return result;
+        }
+
+        private async Task<List<List<PivotHeaderGrouped>>> LoadFilters(string[] filterSystemNames)
+        {
+            var filters = await Task.WhenAll(filterSystemNames.Select(async sn =>
+            {
+                var filterValues = await GetFilterValuesAsync(sn);
+                return new FilterValuesCollection(sn, filterValues);
+            }));
+
+
+            return GetPivotHeades(filters);
+        }
+
+        private BsonDocument ToBsonCellFilter(CellFilterValue cfv)
+        {
+            return new BsonDocument(nameof(Cell.FilterValues), cfv.ToBsonDocument());
+        }
+
+        private List<BsonDocument> ToBsonCellFilters(IEnumerable<PivotHeaderGrouped> headers)
+        {
+            return headers
+                .Select(h => ToBsonCellFilter(h.CellFilterValue))
+                .ToList();
+        }
+
+        public MongoCellService(IMapper mapper, MongoClient mongoClient) : base(mapper, mongoClient)
+        {
+
+        }
 
         public async Task<IEnumerable<Cell>> GetCells(Guid viewId, CellFilterValueDto[] cellFilterDtos)
         {
-            Func<CellFilterValue, BsonDocument> toBsonCellFilter = cfv => new BsonDocument(nameof(Cell.FilterValues), cfv.ToBsonDocument());
-
+            
             var view = await LoadViewByIdAsync(viewId);
 
-            var rFilterSystemName = view.RowFilters[0];
-            var cFilterSystemName = view.ColumnFilters[0];
+            var rFiltersTask = LoadFilters(view.RowFilters);
+            var cFiltersTask = LoadFilters(view.ColumnFilters);
 
             var mdTask = LoadModelDescriptionByIdAsync(view.ModelId);
 
-            var rValuesTask = GetFilterValuesAsync(rFilterSystemName);
-            var cValuesTask = GetFilterValuesAsync(cFilterSystemName);
-
             var filters = mapper
                 .Map<IEnumerable<CellFilterValue>>(cellFilterDtos)
-                .Select(toBsonCellFilter);
+                .Select(ToBsonCellFilter)
+                .ToArray();
 
-            await Task.WhenAll(rValuesTask, cValuesTask);
+            await Task.WhenAll(rFiltersTask, cFiltersTask);
 
-
+            var rFilterGrid = rFiltersTask.Result;
+            var cFilterGrid = cFiltersTask.Result;
             var filterList = new List<BsonDocument>();
 
-            foreach (var rowFilterVal in rValuesTask.Result)
+            foreach (var rowFilters in rFilterGrid)
             {
-                var rCellFilter = new CellFilterValue { FilterSystemName = rFilterSystemName, FilterValueId = rowFilterVal.Id };
-
-                var rCellFilterBson = toBsonCellFilter(rCellFilter);
-                foreach (var columnFilterVal in cValuesTask.Result)
+                var rCellFilters = ToBsonCellFilters(rowFilters); 
+                foreach (var columnFilters in cFilterGrid)
                 {
-                    var cCellFilter = new CellFilterValue { FilterSystemName = cFilterSystemName, FilterValueId = columnFilterVal.Id };
-                    var cCellFilterBson = toBsonCellFilter(cCellFilter);
+                    var cCellFilters = rCellFilters.ToList();
+                    cCellFilters.AddRange(ToBsonCellFilters(columnFilters));
+                    cCellFilters.AddRange(filters);
 
-                    var list = new List<BsonDocument> { rCellFilterBson, rCellFilterBson };
-                    list.AddRange(filters);
-
-                    var andFilter = new BsonDocument("$and", new BsonArray(list));
+                    var andFilter = new BsonDocument("$and", new BsonArray(cCellFilters));
 
                     filterList.Add(andFilter);
-
                 }
             }
 
@@ -126,7 +166,7 @@ namespace Olap.Model
             }
 
             await collection.BulkWriteAsync(writeOperations);
-  
+
         }
 
     }

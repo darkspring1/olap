@@ -63,7 +63,7 @@ export default class EditorHelper {
     const pivotRowHeaders = this.GetPivotHeades(rowFilter);
     const pivotColumnHeaders = this.GetPivotHeades(columnFilter);
 
-    let cellsTmp = cells.map((c) => new CellWrap(c));
+    const cellsTmp = cells.map((c) => new CellWrap(c));
     const cellDescriptionDictionary: { [id: string]: ICellDescription} = {};
 
     cellDescriptions.forEach((elm: ICellDescription): void => {
@@ -85,7 +85,7 @@ export default class EditorHelper {
 
       if (idx !== -1) {
         const result = cellsTmp[idx].cell;
-        cellsTmp = cellsTmp.slice(idx, 1);
+        cellsTmp.splice(idx, 1);
         return EditorHelper.CreateCell(rIndex, cIndex, result);
       }
 
