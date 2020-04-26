@@ -47,9 +47,6 @@ class Grid extends React.Component<IGridProps, { }> {
   render() {
     const { rowPivotGroupedHeaders, columnPivotGroupedHeaders, data } = this.props;
 
-    // eslint-disable-next-line no-debugger
-    debugger;
-
     let colHeaderSubs: IPivotHeaderGrouped[] = [];
 
     columnPivotGroupedHeaders.forEach((g) => {
@@ -80,15 +77,15 @@ class Grid extends React.Component<IGridProps, { }> {
 
     function renderRowHeaders(idx: number): any {
       return rowHeaders[idx].map((h) => {
-        // if (h.childCount === 0) {
-        //   return (<td className="header">{ h.filterValue }</td>);
-        // }
+        if (h.childCount === 0) {
+          return (<td className="header" key={h.filterValueId}>{ h.filterValue }</td>);
+        }
 
-        // if (idx % h.childCount === 0) {
-        //   return (<td className="header" rowSpan={h.childCount}>{ h.filterValue }</td>);
-        // }
+        if (idx % h.childCount !== 0) {
+          return null;
+        }
 
-        return (<td className="header">{ h.filterValue }</td>);
+        return (<td className="header" key={h.filterValueId} rowSpan={h.childCount}>{ h.filterValue }</td>);
       });
     }
 
@@ -97,12 +94,12 @@ class Grid extends React.Component<IGridProps, { }> {
         <thead>
           <tr>
             <th className="header" />
-            { rowHeaders[0].map(() => (<th className="header" />)) }
+            { rowHeaders[0].map((r) => (<th key={r.filterValueId} className="header" />)) }
             { colHeaderSubs.map((header, hIdx) => <th className="header" key={hIdx}>{header.filterValue}</th>)}
           </tr>
           <tr>
             <th className="header" />
-            { rowHeaders[0].map(() => (<th className="header" />)) }
+            { rowHeaders[0].map((r) => (<th key={r.filterValueId} className="header" />)) }
             {this._alphaHeaders.map((header: string) => <th className="header" key={header}>{header}</th>)}
           </tr>
         </thead>
