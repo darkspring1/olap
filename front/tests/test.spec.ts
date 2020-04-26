@@ -49,9 +49,10 @@ function createData(): void {
   const rPivotHeaders = EditorHelper.GetGroupedHeaders([rowFilter]);
   const cPivotHeaders = EditorHelper.GetGroupedHeaders([colFilter]);
 
-  const data: ICellModel[][] = EditorHelper.CreateEditorData(
+  const data: ICellModel<ICell>[][] = EditorHelper.CreateEditorData(
     rPivotHeaders,
     cPivotHeaders,
+    [],
     [cellDescription],
     [cell],
   );

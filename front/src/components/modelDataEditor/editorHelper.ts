@@ -1,20 +1,25 @@
 // eslint-disable-next-line max-classes-per-file
 import { IFilterDescription, IFilterValue } from '../../store/filter';
 import { ICellDescription } from '../../store/model';
-import { ICell } from '../../store/cell/types';
+import { ICell, ICellFilterValue } from '../../store/cell/types';
 import ICellModel from '../excel/cellModel';
 import CellWrap from './cellWrap';
 import uuidv4 from '../../common/uuid';
 import { IPivotHeaderGrouped, PivotHeaderGrouped } from '../excel/PivotHeaderGroup';
 
 export default class EditorHelper {
-  private static CreateCell(id: string, value: string, formula: string, rowIndex: number, columnIndex: number): ICellModel {
+  private static CreateCell(
+    rowIndex: number,
+    columnIndex: number,
+    attached: ICell,
+  ): ICellModel<ICell> {
     return {
-      id,
-      value,
-      formula,
+      id: attached.id,
+      value: attached.value,
+      formula: attached.formula,
       rowIndex,
       columnIndex,
+      attached,
     };
   }
 
@@ -44,12 +49,17 @@ export default class EditorHelper {
     return result;
   }
 
+  static PivotHeaderGroupedToCellFilterValue(arr: IPivotHeaderGrouped[]): ICellFilterValue[] {
+    return arr.map((x): ICellFilterValue => ({ filterSystemName: x.filterSystemName, filterValueId: x.filterValueId }));
+  }
+
   public static CreateEditorData(
     rowFilter: IPivotHeaderGrouped[],
     columnFilter: IPivotHeaderGrouped[],
+    selectedFilters: ICellFilterValue[],
     cellDescriptions: ICellDescription[],
     cells: ICell[],
-  ): ICellModel[][] {
+  ): ICellModel<ICell>[][] {
     const pivotRowHeaders = this.GetPivotHeades(rowFilter);
     const pivotColumnHeaders = this.GetPivotHeades(columnFilter);
 
@@ -61,16 +71,12 @@ export default class EditorHelper {
       cellDescriptionDictionary[key] = elm;
     });
 
-    function cellCtor(rIndex: number, cIndex: number): ICellModel {
-      const rFilterValues = pivotRowHeaders[rIndex].map((x) => x.filterValueId);
-      const cFilterValues = pivotColumnHeaders[cIndex].map((x) => x.filterValueId);
+    function cellCtor(rIndex: number, cIndex: number): ICellModel<ICell> {
+      let rowAndColumnsFilters = EditorHelper.PivotHeaderGroupedToCellFilterValue(pivotRowHeaders[rIndex]);
+      rowAndColumnsFilters = rowAndColumnsFilters.concat(EditorHelper.PivotHeaderGroupedToCellFilterValue(pivotColumnHeaders[cIndex]));
 
       const idx = cellsTmp.findIndex((item: CellWrap): boolean => {
-        if (rFilterValues.some((filterVal) => !item.ContainsFilterValue(filterVal))) {
-          return false;
-        }
-
-        if (cFilterValues.some((filterVal) => !item.ContainsFilterValue(filterVal))) {
+        if (rowAndColumnsFilters.some((fv) => !item.ContainsFilterValue(fv.filterValueId))) {
           return false;
         }
 
@@ -80,23 +86,33 @@ export default class EditorHelper {
       if (idx !== -1) {
         const result = cellsTmp[idx].cell;
         cellsTmp = cellsTmp.slice(idx, 1);
-        return EditorHelper.CreateCell(result.id, result.value, result.formula, rIndex, cIndex);
+        return EditorHelper.CreateCell(rIndex, cIndex, result);
       }
 
       const cellDescr = cellDescriptionDictionary[`${rIndex}_${cIndex}`];
-      // const filterVals = [rFilterVal, cFilterVal];
-      // create from view
+      const filterValues = rowAndColumnsFilters.concat(selectedFilters);
       if (cellDescr) {
-        return EditorHelper.CreateCell(uuidv4(), cellDescr.value, cellDescr.formula, rIndex, cIndex);
+        return EditorHelper.CreateCell(rIndex, cIndex,
+          {
+            id: uuidv4(),
+            value: cellDescr.value,
+            formula: cellDescr.formula,
+            filterValues,
+          });
       }
 
       // create empty
-      return EditorHelper.CreateCell(uuidv4(), null, null, rIndex, cIndex);
+      return EditorHelper.CreateCell(rIndex, cIndex, {
+        id: uuidv4(),
+        value: null,
+        formula: null,
+        filterValues,
+      });
     }
 
     const rowCount = pivotRowHeaders.length;
     const columnCount = pivotColumnHeaders.length;
-    const rows: Array<ICellModel[]> = new Array(rowCount);
+    const rows: Array<ICellModel<ICell>[]> = new Array(rowCount);
 
     for (let i = 0; i < rowCount;) {
       const r = new Array(columnCount);

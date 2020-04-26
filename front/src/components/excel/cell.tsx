@@ -6,8 +6,8 @@
 import * as React from 'react';
 import CellViewModel from './cellViewModel';
 
-interface ICellOwnProps {
-  cellViewModel: CellViewModel;
+interface ICellOwnProps<TAttached> {
+  cellViewModel: CellViewModel<TAttached>;
 }
 
 enum CellMode {
@@ -21,8 +21,8 @@ interface ICellState {
   editValue: string;
 }
 
-export default class Cell extends React.Component<ICellOwnProps, ICellState> {
-  constructor(props: ICellOwnProps) {
+export default class Cell<TAttached> extends React.Component<ICellOwnProps<TAttached>, ICellState> {
+  constructor(props: ICellOwnProps<TAttached>) {
     super(props);
 
     this.state = { mode: CellMode.View, editValue: props.cellViewModel.editValue };

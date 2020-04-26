@@ -1,4 +1,4 @@
-export default interface ICellModel {
+export default interface ICellModel<TAttached> {
   readonly id: string;
 
   value: string;
@@ -8,4 +8,6 @@ export default interface ICellModel {
   readonly rowIndex: number;
 
   readonly columnIndex: number;
+
+  readonly attached: TAttached;
 }

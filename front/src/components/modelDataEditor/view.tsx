@@ -33,7 +33,7 @@ interface IViewState {
 }
 
 class View extends React.Component<IViewProps, IViewState> {
-  data: ICellModel[][];
+  data: ICellModel<ICell>[][];
 
   constructor(props: IViewProps) {
     super(props);
@@ -58,7 +58,7 @@ class View extends React.Component<IViewProps, IViewState> {
     };
   }
 
-  getFilters(cell: ICellModel): ICellFilterValue[] {
+  getFilters(cell: ICellModel<ICell>): ICellFilterValue[] {
     const {
       rowFilters,
       columnFilters,
@@ -81,7 +81,7 @@ class View extends React.Component<IViewProps, IViewState> {
     const {
       onSave,
     } = this.props;
-    const nonEmptyCells: ICellModel[] = [];
+    const nonEmptyCells: ICellModel<ICell>[] = [];
     this.data.forEach((r) => {
       r.forEach((c) => {
         if (c.value || c.formula) {
@@ -90,7 +90,7 @@ class View extends React.Component<IViewProps, IViewState> {
       });
     });
 
-    const cells = nonEmptyCells.map((c: ICellModel): ICell => {
+    const cells = nonEmptyCells.map((c: ICellModel<ICell>): ICell => {
       const filterValues = this.getFilters(c);
       return {
         id: c.id, formula: c.formula, value: c.value, filterValues,
@@ -123,9 +123,13 @@ class View extends React.Component<IViewProps, IViewState> {
       cellsDescription,
     } = this.props;
 
+    const { filters: stateFilters } = this.state;
+
     const rPivotHeaders = EditorHelper.GetGroupedHeaders(rowFilters);
     const cPivotHeaders = EditorHelper.GetGroupedHeaders(columnFilters);
-    this.data = EditorHelper.CreateEditorData(rPivotHeaders, cPivotHeaders, cellsDescription, cells);
+
+    const selectedFilters = Object.keys(stateFilters).map((filterSystemName): ICellFilterValue => ({ filterSystemName, filterValueId: stateFilters[filterSystemName] }));
+    this.data = EditorHelper.CreateEditorData(rPivotHeaders, cPivotHeaders, selectedFilters, cellsDescription, cells);
 
     const renderFilters = (): any => filters.map((f) => {
       const fValues = f.values.map((x: IFilterValue): IFilterOption<IFilterValue> => ({ id: x.id, name: x.value }));

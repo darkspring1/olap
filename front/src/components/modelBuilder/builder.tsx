@@ -6,6 +6,7 @@ import { ModelDescriptionConverter, IModelDescription, ICellDescription } from '
 import ICellModel from '../excel/cellModel';
 import FilterSelect, { IFilterOption } from '../filter/filter';
 import EditorHelper from '../modelDataEditor/editorHelper';
+import { ICell } from '../../store/cell/types';
 
 interface IBuilderState {
   modelName: string;
@@ -55,8 +56,8 @@ class Builder extends React.Component<IBuilderProps, IBuilderState> {
     this.setState({ modelName: e.target.value });
   }
 
-  private createViewData(): ICellModel[][] {
-    const rows: ICellModel[][] = [];
+  private createViewData(): ICellModel<ICell>[][] {
+    const rows: ICellModel<ICell>[][] = [];
     const { rowFilter, columnFilter } = this.props;
 
     for (let i = 0; i < rowFilter.values.length;) {

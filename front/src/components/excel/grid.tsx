@@ -7,24 +7,27 @@ import Cell from './cell';
 import ICellModel from './cellModel';
 import { IPivotHeaderGrouped } from './PivotHeaderGroup';
 
-interface IGridOwnProps {
+interface IGridOwnProps<TAttached> {
   rowPivotGroupedHeaders: IPivotHeaderGrouped[];
   columnPivotGroupedHeaders: IPivotHeaderGrouped[];
-  data: ICellModel[][];
+  data: ICellModel<TAttached>[][];
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface IGridDispatchProps {
 }
 
-type IGridProps = IGridOwnProps & IGridDispatchProps;
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+interface IGridProps<TAttached> extends IGridOwnProps<TAttached>, IGridDispatchProps {
+
+}
 
 const Alpha = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
-class Grid extends React.Component<IGridProps, { }> {
+class Grid<TAttached> extends React.Component<IGridProps<TAttached>, { }> {
   _alphaHeaders: string[];
 
-  constructor(props: IGridProps) {
+  constructor(props: IGridProps<TAttached>) {
     super(props);
 
     const { data } = this.props;
@@ -45,6 +48,7 @@ class Grid extends React.Component<IGridProps, { }> {
   }
 
   render() {
+    type CellViewModelType = CellViewModel<TAttached>;
     const { rowPivotGroupedHeaders, columnPivotGroupedHeaders, data } = this.props;
 
     let colHeaderSubs: IPivotHeaderGrouped[] = [];
@@ -61,17 +65,17 @@ class Grid extends React.Component<IGridProps, { }> {
       rowHeaders = rowHeaders.concat(ungrouped);
     });
 
-    const gridRow = function (cells: CellViewModel[]) {
-      return (cells.map((cell: CellViewModel) => <Cell key={cell.cell.columnIndex} cellViewModel={cell} />)
+    const gridRow = function (cells: CellViewModelType[]) {
+      return (cells.map((cell: CellViewModelType) => <Cell key={cell.cell.columnIndex} cellViewModel={cell} />)
       );
     };
 
-    const grid: CellViewModel[][] = new Array<Array<CellViewModel>>();
+    const grid: CellViewModelType[][] = new Array<Array<CellViewModelType>>();
 
-    data.forEach((row: ICellModel[], rIdx: number) => {
-      grid[rIdx] = new Array<CellViewModel>(row.length);
-      row.forEach((cell: ICellModel, cIdx: number) => {
-        grid[rIdx][cIdx] = new CellViewModel(cell, grid);
+    data.forEach((row: ICellModel<TAttached>[], rIdx: number) => {
+      grid[rIdx] = new Array<CellViewModelType>(row.length);
+      row.forEach((cell: ICellModel<TAttached>, cIdx: number) => {
+        grid[rIdx][cIdx] = new CellViewModel<TAttached>(cell, grid);
       });
     });
 
@@ -104,7 +108,7 @@ class Grid extends React.Component<IGridProps, { }> {
           </tr>
         </thead>
         <tbody>
-          { grid.map((row: CellViewModel[], rIdx: number) => (
+          { grid.map((row: CellViewModelType[], rIdx: number) => (
             <tr key={row[0].cell.rowIndex}>
               { renderRowHeaders(rIdx) }
               <td className="header">{rIdx + 1}</td>
