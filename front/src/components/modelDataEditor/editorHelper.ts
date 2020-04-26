@@ -43,7 +43,7 @@ export default class EditorHelper {
     let result: IPivotHeaderGrouped[][] = [];
 
     groupedHeaders.forEach((g) => {
-      result = result.concat(g.Ungroup());
+      result = result.concat(g.ToGrid());
     });
 
     return result;

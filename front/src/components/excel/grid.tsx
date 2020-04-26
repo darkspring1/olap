@@ -54,14 +54,14 @@ class Grid<TAttached> extends React.Component<IGridProps<TAttached>, { }> {
     let colHeaderSubs: IPivotHeaderGrouped[] = [];
 
     columnPivotGroupedHeaders.forEach((g) => {
-      const c = g.Ungroup();
+      const c = g.ToGrid();
       colHeaderSubs = colHeaderSubs.concat(c[0]);
     });
 
     let rowHeaders: IPivotHeaderGrouped[][] = [];
 
     rowPivotGroupedHeaders.forEach((g) => {
-      const ungrouped = g.Ungroup();
+      const ungrouped = g.ToGrid();
       rowHeaders = rowHeaders.concat(ungrouped);
     });
 

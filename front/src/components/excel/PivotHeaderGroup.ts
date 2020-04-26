@@ -5,7 +5,7 @@ export interface IPivotHeaderGrouped {
   readonly filterValue: string;
   readonly childs: IPivotHeaderGrouped[];
   readonly childCount: number;
-  Ungroup(): IPivotHeaderGrouped[][];
+  ToGrid(): IPivotHeaderGrouped[][];
 }
 
 
@@ -50,7 +50,7 @@ export class PivotHeaderGrouped implements IPivotHeaderGrouped {
     return this._childs.length;
   }
 
-  public Ungroup(): IPivotHeaderGrouped[][] {
+  public ToGrid(): IPivotHeaderGrouped[][] {
     let result: IPivotHeaderGrouped[][] = [];
 
     if (this._childs.length === 0) {
@@ -59,7 +59,7 @@ export class PivotHeaderGrouped implements IPivotHeaderGrouped {
     }
 
     this._childs.forEach((cg) => {
-      const cItems = cg.Ungroup();
+      const cItems = cg.ToGrid();
       result = result.concat(cItems);
     });
 
