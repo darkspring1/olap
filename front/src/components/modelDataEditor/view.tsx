@@ -19,6 +19,7 @@ interface IViewOwnProps {
   // cells with formulas and hardcoded values
   readonly cellsDescription: ICellDescription[];
   readonly filters: IFilterDescription[];
+  readonly debug: boolean;
 }
 
 interface IViewDispatchProps {
@@ -116,6 +117,7 @@ class View extends React.Component<IViewProps, IViewState> {
       columnFilters,
       filters,
       cellsDescription,
+      debug,
     } = this.props;
 
     const { filters: stateFilters } = this.state;
@@ -140,7 +142,7 @@ class View extends React.Component<IViewProps, IViewState> {
     return (
       <>
         {renderFilters()}
-        <Grid data={this.data} rowPivotGroupedHeaders={rPivotHeaders} columnPivotGroupedHeaders={cPivotHeaders} />
+        <Grid debug={debug} data={this.data} rowPivotGroupedHeaders={rPivotHeaders} columnPivotGroupedHeaders={cPivotHeaders} />
         <button onClick={this.save}>Save data</button>
       </>
     );

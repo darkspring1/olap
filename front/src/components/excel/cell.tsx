@@ -8,6 +8,7 @@ import CellViewModel from './cellViewModel';
 
 interface ICellOwnProps<TAttached> {
   cellViewModel: CellViewModel<TAttached>;
+  debug: boolean;
 }
 
 enum CellMode {
@@ -67,9 +68,22 @@ export default class Cell<TAttached> extends React.Component<ICellOwnProps<TAtta
   }
 
   render() {
-    const { cellViewModel } = this.props;
+    const { cellViewModel, debug } = this.props;
     const { mode, editValue } = this.state;
     let markup;
+
+    function renderDebugInfo(): any {
+      if (debug) {
+        return (
+          <>
+            <div>cell_id</div>
+            <div>{cellViewModel.cell.id}</div>
+          </>
+        );
+      }
+      return null;
+    }
+
     if (mode === CellMode.View || mode === CellMode.Active) {
       markup = (
         <td
@@ -78,11 +92,17 @@ export default class Cell<TAttached> extends React.Component<ICellOwnProps<TAtta
           onClick={() => this.onClick()}
           onDoubleClick={() => this.onDoubleClick()}
         >
+          {renderDebugInfo()}
           {cellViewModel.cell.value}
         </td>
       );
     } else if (mode === CellMode.Edit) {
-      markup = <td><input onBlur={this.onBlur} autoFocus type="text" value={editValue} onChange={this.onChange} /></td>;
+      markup = (
+        <td>
+          {renderDebugInfo()}
+          <input onBlur={this.onBlur} autoFocus type="text" value={editValue} onChange={this.onChange} />
+        </td>
+      );
     }
 
     return (markup);

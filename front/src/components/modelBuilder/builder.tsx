@@ -104,7 +104,7 @@ class Builder extends React.Component<IBuilderProps, IBuilderState> {
       <>
         {renderFilters()}
         <input type="text" value={state.modelName} onChange={this.onChange} />
-        <Grid data={data} rowPivotGroupedHeaders={rPivotHeaders} columnPivotGroupedHeaders={cPivotHeaders} />
+        <Grid debug data={data} rowPivotGroupedHeaders={rPivotHeaders} columnPivotGroupedHeaders={cPivotHeaders} />
         <button onClick={() => this.onSaveModel(data)}>Save Model</button>
       </>
     );

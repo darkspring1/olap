@@ -31,6 +31,7 @@ function createViewProps(state: IState, view: IView): IViewOwnProps {
     rowFilters,
     filters,
     cells: cells[view.id].cells,
+    debug: false,
   };
 }
 

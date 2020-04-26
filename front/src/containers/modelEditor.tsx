@@ -38,6 +38,7 @@ const ModelEditor = function (props: IModelEditorProps): any {
       columnFilters,
       cellsDescription,
       filters,
+      debug,
     } = viewInfo.props;
 
     return (
@@ -50,6 +51,7 @@ const ModelEditor = function (props: IModelEditorProps): any {
         filters={filters}
         onCellsLoad={(f) => onCellsLoad(viewInfo.id, f)}
         onSave={onSave}
+        debug={debug}
       />
     );
   };

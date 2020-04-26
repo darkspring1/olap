@@ -11,6 +11,7 @@ interface IGridOwnProps<TAttached> {
   rowPivotGroupedHeaders: IPivotHeaderGrouped[];
   columnPivotGroupedHeaders: IPivotHeaderGrouped[];
   data: ICellModel<TAttached>[][];
+  debug: boolean;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -49,7 +50,9 @@ class Grid<TAttached> extends React.Component<IGridProps<TAttached>, { }> {
 
   render() {
     type CellViewModelType = CellViewModel<TAttached>;
-    const { rowPivotGroupedHeaders, columnPivotGroupedHeaders, data } = this.props;
+    const {
+      rowPivotGroupedHeaders, columnPivotGroupedHeaders, data, debug,
+    } = this.props;
 
     let colHeaderSubs: IPivotHeaderGrouped[] = [];
 
@@ -66,7 +69,7 @@ class Grid<TAttached> extends React.Component<IGridProps<TAttached>, { }> {
     });
 
     const gridRow = function (cells: CellViewModelType[]) {
-      return (cells.map((cell: CellViewModelType) => <Cell key={cell.cell.columnIndex} cellViewModel={cell} />)
+      return (cells.map((cell: CellViewModelType) => <Cell debug={debug} key={cell.cell.columnIndex} cellViewModel={cell} />)
       );
     };
 
@@ -79,17 +82,42 @@ class Grid<TAttached> extends React.Component<IGridProps<TAttached>, { }> {
       });
     });
 
+    function renderRowHeaderValue(h: IPivotHeaderGrouped): any {
+      if (debug) {
+        return (
+          <>
+            <div>
+              filterSystemName
+            </div>
+            <div>
+              { h.filterSystemName }
+            </div>
+
+            <div>
+              filterValueId
+            </div>
+            <div>
+              { h.filterValueId }
+            </div>
+            <div>{ h.filterValue }</div>
+          </>
+        );
+      }
+
+      return (<>{h.filterValue}</>);
+    }
+
     function renderRowHeaders(idx: number): any {
       return rowHeaders[idx].map((h) => {
         if (h.childCount === 0) {
-          return (<td className="header" key={h.filterValueId}>{ h.filterValue }</td>);
+          return (<td className="header" key={h.filterValueId}>{ renderRowHeaderValue(h) }</td>);
         }
 
         if (idx % h.childCount !== 0) {
           return null;
         }
 
-        return (<td className="header" key={h.filterValueId} rowSpan={h.childCount}>{ h.filterValue }</td>);
+        return (<td className="header" key={h.filterValueId} rowSpan={h.childCount}>{ renderRowHeaderValue(h) }</td>);
       });
     }
 

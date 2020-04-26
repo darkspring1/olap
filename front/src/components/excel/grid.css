@@ -1,4 +1,4 @@
 .excel-grid tr td,
 .excel-grid tr th
-{ border: 1px solid black; width: 50px; height: 30px; }
+{ border: 1px solid black; min-width: 50px; min-height: 30px; }
 .excel-grid tr .header { background: grey }
