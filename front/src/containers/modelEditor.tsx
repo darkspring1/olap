@@ -42,6 +42,7 @@ const ModelEditor = function (props: IModelEditorProps): any {
 
     return (
       <View
+        key={viewInfo.id}
         rowFilters={rowFilters}
         cellsDescription={cellsDescription}
         columnFilters={columnFilters}
