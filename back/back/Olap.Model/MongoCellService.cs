@@ -80,13 +80,52 @@ namespace Olap.Model
 
         public async Task SaveCells(Guid modelId, CellDto[] dtos)
         {
+
             var modelDescription = await LoadModelDescriptionByIdAsync(modelId);
 
+            var filter = Builders<Cell>.Filter.In(c => c.Id, dtos.Select(dto => dto.Id));
             var collection = GetCollection<Cell>(modelDescription.CellCollection);
 
-            var cells = mapper.Map<IEnumerable<Cell>>(dtos);
+            var cursor = await collection.FindAsync(filter);
+            var existedCells = await cursor.ToListAsync();
 
-            await collection.InsertManyAsync(cells);
+            var cellsFromClient = mapper.Map<IEnumerable<Cell>>(dtos);
+
+            var forDelete = cellsFromClient
+                .Where(dto => string.IsNullOrEmpty(dto.Formula) && string.IsNullOrEmpty(dto.Value))
+                .ToArray();
+
+            Func<Cell, Cell, bool> cellComparer = (c1, c2) => c1.Id == c2.Id;
+
+            var forUpsert = cellsFromClient.Except(forDelete, cellComparer).ToArray();
+
+
+            var forInsert = forUpsert.Except(existedCells, cellComparer).ToArray();
+            var forUpdate = forUpsert.Intersect(existedCells, cellComparer).ToArray();
+
+            var writeOperations = new List<WriteModel<Cell>>();
+
+
+            var deleteFilter = Builders<Cell>.Filter.In(c => c.Id, forDelete.Select(c => c.Id));
+            writeOperations.Add(new DeleteManyModel<Cell>(deleteFilter));
+
+            foreach (var up in forUpdate)
+            {
+                var update = Builders<Cell>
+                    .Update
+                    .Set(c => c.Formula, up.Formula)
+                    .Set(c => c.Value, up.Value);
+
+                var upFilter = Builders<Cell>.Filter.Eq(c => c.Id, up.Id);
+                writeOperations.Add(new UpdateOneModel<Cell>(upFilter, update));
+            }
+
+            foreach (var ins in forInsert)
+            {
+                writeOperations.Add(new InsertOneModel<Cell>(ins));
+            }
+
+            await collection.BulkWriteAsync(writeOperations);
   
         }
 

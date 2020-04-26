@@ -81,24 +81,19 @@ class View extends React.Component<IViewProps, IViewState> {
     const {
       onSave,
     } = this.props;
-    const nonEmptyCells: ICellModel<ICell>[] = [];
+    const nonEmptyCells: ICell[] = [];
     this.data.forEach((r) => {
       r.forEach((c) => {
         if (c.value || c.formula) {
-          nonEmptyCells.push(c);
+          nonEmptyCells.push({
+            id: c.attached.id, value: c.value, formula: c.formula, filterValues: c.attached.filterValues,
+          });
         }
       });
     });
 
-    const cells = nonEmptyCells.map((c: ICellModel<ICell>): ICell => {
-      const filterValues = this.getFilters(c);
-      return {
-        id: c.id, formula: c.formula, value: c.value, filterValues,
-      };
-    });
-
-    if (cells.length > 0) {
-      onSave(cells);
+    if (nonEmptyCells.length > 0) {
+      onSave(nonEmptyCells);
     }
   }
 
